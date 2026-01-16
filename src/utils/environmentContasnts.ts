@@ -1,0 +1,1 @@
+export const PhaserLabsBaseURL = 'https://labs.phaser.io'
