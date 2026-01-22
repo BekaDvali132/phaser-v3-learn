@@ -6,15 +6,41 @@ export class RunnerGameScene extends Phaser.Scene {
   public player: Phaser.Physics.Arcade.Sprite | undefined;
   public cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
   public stars: Phaser.Physics.Arcade.Group | undefined;
+  public bombs: Phaser.Physics.Arcade.Group | undefined;
   public score: number = 0;
   public scoreText: Phaser.GameObjects.Text | undefined;
-
+  public gameOver: boolean = false;
 
   collectStar(playerObject: Phaser.GameObjects.GameObject, star: Phaser.GameObjects.GameObject) {
     const starImage = star as Phaser.Physics.Arcade.Image;
     starImage.disableBody(true, true);
     this.score += 10;
     this.scoreText?.setText('Score: ' + this.score);
+
+    if (this.stars?.countActive(true) === 0) {
+      this.stars.children.iterate((child) => {
+        const starChild = child as Phaser.Physics.Arcade.Image;
+        starChild.enableBody(true, starChild.x, 0, true, true);
+      });
+
+      const x = (this.player?.x || 0) < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+      const bomb = this.bombs?.create(x, 16, 'bomb') as Phaser.Physics.Arcade.Image;
+      bomb.setBounce(1);
+      bomb.setCollideWorldBounds(true);
+      bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    }
+  }
+
+  hitBomb(player: Phaser.GameObjects.GameObject, bomb: Phaser.GameObjects.GameObject) {
+    this.physics.pause();
+
+    const playerSprite = player as Phaser.Physics.Arcade.Sprite;
+
+    playerSprite.setTint(0xff0000);
+
+    playerSprite.anims.play('turn');
+
+    this.gameOver = true;
   }
 
   preload() {
@@ -84,6 +110,12 @@ export class RunnerGameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.stars, this.collectStar, undefined, this);
 
     this.scoreText = this.add.text(16, 16, 'score: 0', {fontSize: '32px', color: '#000'});
+
+    this.bombs = this.physics.add.group();
+
+    this.physics.add.collider(this.bombs, this.platforms);
+
+    this.physics.add.collider(this.player, this.bombs, this.hitBomb, undefined, this);
   }
 
   update() {
