@@ -5,11 +5,13 @@ export class PlinkoGameScene extends Phaser.Scene {
 
     pegs: Phaser.Physics.Matter.Image[] = [];
     balls: Phaser.Physics.Matter.Image[] = [];
+    wheel: Phaser.GameObjects.Image | null = null;
 
     preload() {
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
         this.load.image('background', '/plinkoGameAssets/plinkoBackground.webp');
         this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
+        this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
     }
 
     create() {
@@ -22,13 +24,19 @@ export class PlinkoGameScene extends Phaser.Scene {
             this.sys.canvas.width,
             this.sys.canvas.height
         ).setOrigin(0, 0);
+
+        this.wheel = this.add.image(720, -5, 'wheel').setDisplaySize(
+            200,
+            200
+        );
+
         plinkoCreatePegs({pegs: this.pegs, this: this});
 
         // Add a simple button
-        const dropButton = this.add.rectangle(720, 80, 150, 50, 0x4CAF50);
+        const dropButton = this.add.rectangle(720, 900, 150, 50, 0x4CAF50);
         dropButton.setInteractive({ useHandCursor: true });
 
-        this.add.text(720, 80, 'DROP BALL', {
+        this.add.text(720, 900, 'DROP BALL', {
             fontSize: '20px',
             color: '#ffffff'
         }).setOrigin(0.5);
@@ -42,6 +50,9 @@ export class PlinkoGameScene extends Phaser.Scene {
     }
 
     update() {
+        if (this.wheel) {
+            this.wheel.rotation += 0.02;
+        }
         this.balls = this.balls.filter(ball => {
             if (ball.y > this.sys.canvas.height + 100) {
                 ball.destroy();

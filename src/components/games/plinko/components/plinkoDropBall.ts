@@ -9,8 +9,8 @@ export default function plinkoDropBall({ balls, this: scene }: Props): Phaser.Ph
     const ballSize = 32;
     const ballRadius = ballSize / 2;
 
-    const dropX = 720 + Phaser.Math.Between(-20, 20);
-    const dropY = 120;
+    const dropX = 720;
+    const dropY = 60;
 
     const ball = scene.matter.add.image(dropX, dropY, 'lemon', undefined, {
         shape: {type: 'circle', radius: ballRadius},
