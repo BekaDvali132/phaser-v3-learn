@@ -1,11 +1,20 @@
 import plinkoCreatePegs from "./plinkoCreatePegs.ts";
 import plinkoDropBall from "./plinkoDropBall.ts";
+import plinkoSetupCollissions from "./plinkoSetupCollissions.ts";
+
+export type PlinkoGameObjectsType = {
+    pegs: Phaser.Physics.Matter.Image[],
+    balls: Phaser.Physics.Matter.Image[],
+    wheel: Phaser.GameObjects.Image | null
+}
 
 export class PlinkoGameScene extends Phaser.Scene {
 
-    pegs: Phaser.Physics.Matter.Image[] = [];
-    balls: Phaser.Physics.Matter.Image[] = [];
-    wheel: Phaser.GameObjects.Image | null = null;
+    objects: PlinkoGameObjectsType = {
+        pegs: [],
+        balls: [],
+        wheel: null
+    }
 
     preload() {
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
@@ -17,7 +26,6 @@ export class PlinkoGameScene extends Phaser.Scene {
     create() {
         this.matter.world.setBounds(0, 0, 1440, 955);
 
-        // Reduce gravity for slower fall
         (this.matter.world.engine as any).gravity.y = 1.5;
 
         this.add.image(0, 0, 'background').setDisplaySize(
@@ -25,16 +33,21 @@ export class PlinkoGameScene extends Phaser.Scene {
             this.sys.canvas.height
         ).setOrigin(0, 0);
 
-        this.wheel = this.add.image(720, -5, 'wheel').setDisplaySize(
+        this.objects.wheel = this.add.image(720, -5, 'wheel').setDisplaySize(
             200,
             200
         );
 
-        plinkoCreatePegs({pegs: this.pegs, this: this});
+        plinkoCreatePegs({objects: this.objects, this: this});
 
-        // Add a simple button
+        // Setup collision detection
+        plinkoSetupCollissions({
+            this: this,
+            objects: this.objects
+        })
+
         const dropButton = this.add.rectangle(720, 900, 150, 50, 0x4CAF50);
-        dropButton.setInteractive({ useHandCursor: true });
+        dropButton.setInteractive({useHandCursor: true});
 
         this.add.text(720, 900, 'DROP BALL', {
             fontSize: '20px',
@@ -44,16 +57,17 @@ export class PlinkoGameScene extends Phaser.Scene {
         dropButton.on('pointerdown', () => {
             plinkoDropBall({
                 this: this,
-                balls: this.balls
+                objects: this.objects,
+                ballPath: [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
             })
         });
     }
 
     update() {
-        if (this.wheel) {
-            this.wheel.rotation += 0.02;
+        if (this.objects.wheel) {
+            this.objects.wheel.rotation += 0.02;
         }
-        this.balls = this.balls.filter(ball => {
+        this.objects.balls = this.objects.balls.filter(ball => {
             if (ball.y > this.sys.canvas.height + 100) {
                 ball.destroy();
                 return false;

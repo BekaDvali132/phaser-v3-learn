@@ -1,12 +1,14 @@
+import type {PlinkoGameObjectsType} from "./PlinkoGameScene.ts";
+
 interface Props {
-    pegs: Phaser.Physics.Matter.Image[];
+    objects: PlinkoGameObjectsType;
     this: Phaser.Scene & {
         matter: Phaser.Physics.Matter.MatterPhysics;
     };
 }
 
-export default function createPegs({ pegs, this: scene }: Props): void{
-    pegs = [];
+export default function createPegs({ objects, this: scene }: Props): void{
+    objects.pegs = [];
     const rows = 14;
     const startY = 120;
     const horizontalGap = 48;
@@ -25,14 +27,11 @@ export default function createPegs({ pegs, this: scene }: Props): void{
             const peg = scene.matter.add.image(x, y, 'pegImage', undefined, {
                 isStatic: true,
                 shape: { type: 'circle', radius: pegRadius },
-                // Add these for better collision detection
                 chamfer: { radius: 0 }
             });
 
-            // Scale the image BEFORE setting body - important!
             peg.setDisplaySize(pegDiameter, pegDiameter);
 
-            // Recreate the physics body to match the scaled display size
             peg.setBody({
                 type: 'circle',
                 radius: pegRadius
@@ -40,7 +39,10 @@ export default function createPegs({ pegs, this: scene }: Props): void{
                 isStatic: true
             });
 
-            pegs.push(peg);
+            // Store the row index in the peg's data
+            peg.setData('rowIndex', row);
+
+            objects.pegs.push(peg);
         }
     }
 }
