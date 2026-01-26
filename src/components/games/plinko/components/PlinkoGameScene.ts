@@ -26,8 +26,8 @@ export class PlinkoGameScene extends Phaser.Scene {
         this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
 
         this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
-            frameWidth: 186,  // Width of each multiplier frame
-            frameHeight: 184  // Height of each multiplier frame
+            frameWidth: 666,  // Width of each multiplier frame
+            frameHeight: 483  // Height of each multiplier frame
         });
     }
 
@@ -68,7 +68,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             plinkoDropBall({
                 this: this,
                 objects: this.objects,
-                ballPath: [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
+                ballPath: [0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0]
             })
         });
     }
@@ -78,7 +78,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             this.objects.wheel.rotation += 0.02;
         }
         this.objects.balls = this.objects.balls.filter(ball => {
-            if (ball.y > this.sys.canvas.height + 100) {
+            if (ball.getData('markedForDestroy') && ball.alpha <= 0) {
                 ball.destroy();
                 return false;
             }

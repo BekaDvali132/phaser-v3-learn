@@ -1,4 +1,6 @@
 import type {PlinkoGameObjectsType} from "./PlinkoGameScene.ts";
+import plinkoHandleBallPegCollission from "./plinkoHandleBallPegCollission.ts";
+import plinkoHandleBallMultiplierHit from "./plinkoHandleBallMultiplierHit.ts";
 
 interface Props {
     this: Phaser.Scene & {
@@ -15,31 +17,18 @@ function getPegFromBody(body: any, objects: PlinkoGameObjectsType): Phaser.Physi
     return objects.pegs.find(p => p.body === body) || null;
 }
 
-function handleBallPegCollision(ball: Phaser.Physics.Matter.Image, peg: Phaser.Physics.Matter.Image) {
-    const pegId = (peg.body as any).id;
-    const hitPegs = ball.getData('hitPegs') || new Set();
-
-    if (hitPegs.has(pegId)) {
-        return;
+function getMultiplierFromBody(body: any, objects: PlinkoGameObjectsType): Phaser.GameObjects.Image | null {
+    if (body.label === 'multiplier' && body.gameObject) {
+        return body.gameObject as Phaser.GameObjects.Image;
     }
 
-    hitPegs.add(pegId);
-    ball.setData('hitPegs', hitPegs);
+    // Alternative: search through multipliers
+    const multiplier = objects.multipliers.find(m => {
+        const sensor = m.getData('sensor');
+        return sensor && sensor === body;
+    });
 
-    const path = ball.getData('path') as number[];
-    const pegRowIndex = peg.getData('rowIndex') as number;
-
-    if (pegRowIndex >= path.length || pegRowIndex < 0) {
-        return;
-    }
-
-    const direction = path[pegRowIndex] === 0 ? -1 : 1;
-    const horizontalSpeed = 2;
-    const currentVelocityY = (ball.body as MatterJS.BodyType).velocity.y;
-
-    ball.setVelocity(direction * horizontalSpeed, currentVelocityY);
-
-    console.log(`Peg Row ${pegRowIndex}: Going ${direction === -1 ? 'LEFT' : 'RIGHT'}`);
+    return multiplier || null;
 }
 
 export default function plinkoSetupCollissions({this: scene, objects}: Props): void {
@@ -49,9 +38,20 @@ export default function plinkoSetupCollissions({this: scene, objects}: Props): v
 
             const ball = getBallFromBody(bodyA, objects) || getBallFromBody(bodyB, objects);
             const peg = getPegFromBody(bodyA, objects) || getPegFromBody(bodyB, objects);
+            const multiplier = getMultiplierFromBody(bodyA, objects) || getMultiplierFromBody(bodyB, objects);
 
             if (ball && peg) {
-                handleBallPegCollision(ball, peg);
+                plinkoHandleBallPegCollission(ball, peg);
+                return;
+            }
+
+            if (ball && multiplier) {
+                plinkoHandleBallMultiplierHit({
+                    ball,
+                    multiplier,
+                    scene,
+                    objects
+                })
             }
         });
     });
