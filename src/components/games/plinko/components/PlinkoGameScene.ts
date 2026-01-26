@@ -1,11 +1,13 @@
 import plinkoCreatePegs from "./plinkoCreatePegs.ts";
 import plinkoDropBall from "./plinkoDropBall.ts";
 import plinkoSetupCollissions from "./plinkoSetupCollissions.ts";
+import {plinkoCreateMultipliers} from "./plinkoCreateMultipliers.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
     balls: Phaser.Physics.Matter.Image[],
-    wheel: Phaser.GameObjects.Image | null
+    wheel: Phaser.GameObjects.Image | null,
+    multipliers: Phaser.GameObjects.Image[]
 }
 
 export class PlinkoGameScene extends Phaser.Scene {
@@ -13,7 +15,8 @@ export class PlinkoGameScene extends Phaser.Scene {
     objects: PlinkoGameObjectsType = {
         pegs: [],
         balls: [],
-        wheel: null
+        wheel: null,
+        multipliers: []
     }
 
     preload() {
@@ -21,6 +24,11 @@ export class PlinkoGameScene extends Phaser.Scene {
         this.load.image('background', '/plinkoGameAssets/plinkoBackground.webp');
         this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
         this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
+
+        this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
+            frameWidth: 186,  // Width of each multiplier frame
+            frameHeight: 184  // Height of each multiplier frame
+        });
     }
 
     create() {
@@ -39,6 +47,8 @@ export class PlinkoGameScene extends Phaser.Scene {
         );
 
         plinkoCreatePegs({objects: this.objects, this: this});
+
+        plinkoCreateMultipliers({objects: this.objects, this: this});
 
         // Setup collision detection
         plinkoSetupCollissions({
