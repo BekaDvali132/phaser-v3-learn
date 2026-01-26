@@ -1,4 +1,4 @@
-import type {PlinkoGameObjectsType} from "./PlinkoGameScene.ts";
+import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
 import plinkoHandleBallPegCollission from "./plinkoHandleBallPegCollission.ts";
 import plinkoHandleBallMultiplierHit from "./plinkoHandleBallMultiplierHit.ts";
 

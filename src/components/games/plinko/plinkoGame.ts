@@ -1,5 +1,5 @@
 import {Game, type Types} from "phaser";
-import {PlinkoGameScene} from "./components/PlinkoGameScene.ts";
+import {PlinkoGameScene} from "./scenes/gameScene/PlinkoGameScene.ts";
 
 interface Props {
     parent: string;

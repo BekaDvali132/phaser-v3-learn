@@ -1,4 +1,4 @@
-import type {PlinkoGameObjectsType} from "./PlinkoGameScene.ts";
+import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType,

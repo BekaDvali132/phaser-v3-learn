@@ -1,8 +1,8 @@
-import plinkoCreatePegs from "./plinkoCreatePegs.ts";
-import plinkoDropBall from "./plinkoDropBall.ts";
-import plinkoSetupCollissions from "./plinkoSetupCollissions.ts";
-import {plinkoCreateMultipliers} from "./plinkoCreateMultipliers.ts";
-import plinkoCreateVideoBackground from "./plinkoCreateVideoBackground.ts";
+import plinkoCreatePegs from "./components/plinkoCreatePegs.ts";
+import plinkoDropBall from "./components/plinkoDropBall.ts";
+import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
+import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
+import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
