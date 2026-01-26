@@ -2,12 +2,14 @@ import plinkoCreatePegs from "./plinkoCreatePegs.ts";
 import plinkoDropBall from "./plinkoDropBall.ts";
 import plinkoSetupCollissions from "./plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./plinkoCreateMultipliers.ts";
+import plinkoCreateVideoBackground from "./plinkoCreateVideoBackground.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
     balls: Phaser.Physics.Matter.Image[],
     wheel: Phaser.GameObjects.Image | null,
-    multipliers: Phaser.GameObjects.Image[]
+    multipliers: Phaser.GameObjects.Image[],
+    backgroundVideo: Phaser.GameObjects.Video | null,
 }
 
 export class PlinkoGameScene extends Phaser.Scene {
@@ -16,12 +18,14 @@ export class PlinkoGameScene extends Phaser.Scene {
         pegs: [],
         balls: [],
         wheel: null,
-        multipliers: []
+        multipliers: [],
+        backgroundVideo: null,
     }
+
 
     preload() {
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
-        this.load.image('background', '/plinkoGameAssets/plinkoBackground.webp');
+        this.load.video('backgroundVideo', '/plinkoGameAssets/plinkoBackground.mp4');
         this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
         this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
 
@@ -36,10 +40,10 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         (this.matter.world.engine as any).gravity.y = 1.5;
 
-        this.add.image(0, 0, 'background').setDisplaySize(
-            this.sys.canvas.width,
-            this.sys.canvas.height
-        ).setOrigin(0, 0);
+        plinkoCreateVideoBackground({
+            objects: this.objects,
+            scene: this
+        })
 
         this.objects.wheel = this.add.image(720, -5, 'wheel').setDisplaySize(
             200,
@@ -84,5 +88,13 @@ export class PlinkoGameScene extends Phaser.Scene {
             }
             return true;
         });
+    }
+
+    destroy() {
+        // Clean up video when scene is destroyed
+        if (this.objects.backgroundVideo) {
+            this.objects.backgroundVideo.stop();
+            this.objects.backgroundVideo.destroy();
+        }
     }
 }
