@@ -1,6 +1,12 @@
 import Phaser from "phaser";
 
 
+type ArcadeCallbackObject =
+  | Phaser.Physics.Arcade.Body
+  | Phaser.Physics.Arcade.StaticBody
+  | Phaser.Types.Physics.Arcade.GameObjectWithBody
+  | Phaser.Tilemaps.Tile;
+
 export class RunnerGameScene extends Phaser.Scene {
   public platforms: Phaser.Physics.Arcade.StaticGroup | undefined;
   public player: Phaser.Physics.Arcade.Sprite | undefined;
@@ -11,7 +17,10 @@ export class RunnerGameScene extends Phaser.Scene {
   public scoreText: Phaser.GameObjects.Text | undefined;
   public gameOver: boolean = false;
 
-  collectStar(playerObject: Phaser.GameObjects.GameObject, star: Phaser.GameObjects.GameObject) {
+  collectStar(
+    _playerObject: ArcadeCallbackObject,
+    star: ArcadeCallbackObject
+  ) {
     const starImage = star as Phaser.Physics.Arcade.Image;
     starImage.disableBody(true, true);
     this.score += 10;
@@ -21,6 +30,8 @@ export class RunnerGameScene extends Phaser.Scene {
       this.stars.children.iterate((child) => {
         const starChild = child as Phaser.Physics.Arcade.Image;
         starChild.enableBody(true, starChild.x, 0, true, true);
+
+        return null;
       });
 
       const x = (this.player?.x || 0) < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
@@ -31,7 +42,10 @@ export class RunnerGameScene extends Phaser.Scene {
     }
   }
 
-  hitBomb(player: Phaser.GameObjects.GameObject, bomb: Phaser.GameObjects.GameObject) {
+  hitBomb(
+    player: ArcadeCallbackObject,
+    _bomb: ArcadeCallbackObject
+  ) {
     this.physics.pause();
 
     const playerSprite = player as Phaser.Physics.Arcade.Sprite;
@@ -103,6 +117,8 @@ export class RunnerGameScene extends Phaser.Scene {
     this.stars.children.iterate((child) => {
       const star = child as Phaser.Physics.Arcade.Image;
       star.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+      return null;
     });
 
     this.physics.add.collider(this.stars, this.platforms);

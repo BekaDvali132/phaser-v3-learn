@@ -10,6 +10,10 @@ function helloWorldGame({parent}: Props) {
         parent,
         width: 800,
         height: 600,
+        scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+        },
         scene: HelloWorldGameScene,
         physics: {
             default: 'arcade',

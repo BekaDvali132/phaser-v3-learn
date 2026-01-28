@@ -22,7 +22,7 @@ export function plinkoCreateMultipliers ({ this: scene, objects }: Props): void{
         multiplier.setDisplaySize(multiplierWidth, 46 * multiplierHeightScale);
         multiplier.setData('originalScale', multiplier.scale);
 
-        const sensor = scene.matter.add.rectangle(x, yPosition, 46, 46, {
+        const sensor = scene.matter.add.rectangle(x, yPosition, 50, 40, {
             isStatic: true,
             isSensor: true,
             label: 'multiplier'
