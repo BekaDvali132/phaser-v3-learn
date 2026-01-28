@@ -1,27 +1,39 @@
-import {useEffect} from "react";
+import { useEffect, useRef } from "react";
 
 interface Props {
-    gameInstance: ({parent}: { parent: string }) => Phaser.Game;
+  gameInstance: ({ parent }: { parent: string }) => Phaser.Game;
+  width?: number;
+  height?: number;
 }
 
-function PhaserGameRender({
-                              gameInstance
-                          }: Props) {
+function PhaserGameRender({ gameInstance, width, height }: Props) {
+  const gameRef = useRef<Phaser.Game | null>(null);
 
+  useEffect(() => {
+    const game = gameInstance({
+      parent: "phaser-container",
+    });
 
-    useEffect(() => {
-        const game = gameInstance({
-            parent: 'phaser-container'
-        });
+    gameRef.current = game;
 
-        return () => {
-            game.destroy(true);
-        }
-    }, []);
+    return () => {
+      game.destroy(true);
+      gameRef.current = null;
+    };
+  }, [gameInstance]);
 
-    return (
-        <div id={'phaser-container'}></div>
-    );
+  useEffect(() => {
+    if (!gameRef.current) return;
+
+    gameRef.current.scale.refresh();
+  }, [width, height]);
+
+  return (
+    <div
+      id={"phaser-container"}
+      style={{ width, height, overflow: "hidden" }}
+    ></div>
+  );
 }
 
 export default PhaserGameRender;

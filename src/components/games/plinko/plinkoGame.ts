@@ -11,6 +11,10 @@ function plinkoGame({parent}: Props) {
         parent,
         width: 1440,
         height: 955,
+        scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+        },
         physics: {
             default: 'matter',
         },

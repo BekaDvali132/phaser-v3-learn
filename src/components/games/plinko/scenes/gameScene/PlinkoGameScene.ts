@@ -66,7 +66,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             plinkoDropBall({
                 this: this,
                 objects: this.objects,
-                ballPath: [0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0]
+                ballPath: [1, 1 ,1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
             })
         });
     }
