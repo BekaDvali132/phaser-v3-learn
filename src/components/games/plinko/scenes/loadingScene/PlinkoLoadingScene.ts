@@ -1,4 +1,4 @@
-export class LoadingScene extends Phaser.Scene {
+export class PlinkoLoadingScene extends Phaser.Scene {
     private loadingVideo?: Phaser.GameObjects.Video;
 
     constructor() {
