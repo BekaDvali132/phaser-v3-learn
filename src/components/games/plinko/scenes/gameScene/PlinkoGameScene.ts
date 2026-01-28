@@ -14,6 +14,10 @@ export type PlinkoGameObjectsType = {
 
 export class PlinkoGameScene extends Phaser.Scene {
 
+    constructor() {
+        super({ key: 'PlinkoGameScene' });
+    }
+
     objects: PlinkoGameObjectsType = {
         pegs: [],
         balls: [],
@@ -23,17 +27,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     }
 
 
-    preload() {
-        this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
-        this.load.video('backgroundVideo', '/plinkoGameAssets/plinkoBackground.mp4');
-        this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
-        this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
-
-        this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
-            frameWidth: 666,  // Width of each multiplier frame
-            frameHeight: 483  // Height of each multiplier frame
-        });
-    }
+    preload() {}
 
     create() {
         this.matter.world.setBounds(0, 0, 1440, 955);
