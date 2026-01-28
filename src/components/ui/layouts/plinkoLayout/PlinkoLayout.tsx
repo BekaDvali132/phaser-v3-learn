@@ -1,4 +1,5 @@
 import PlinkoHeader from "./components/PlinkoHeader.tsx";
+import PlinkoFooter from "./components/PlinkoFooter.tsx";
 
 interface Props {
     children: React.ReactNode;
@@ -11,6 +12,7 @@ function PlinkoLayout({children}: Props) {
             <main className={'h-full w-full absolute left-0 top-0'}>
                 {children}
             </main>
+            <PlinkoFooter/>
         </div>
     );
 }
