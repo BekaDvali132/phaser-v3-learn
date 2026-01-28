@@ -9,8 +9,8 @@ function plinkoGame({parent}: Props) {
     const config: Types.Core.GameConfig = {
         type: Phaser.AUTO,
         parent,
-        width: 1440,
-        height: 955,
+        width: window.innerWidth,
+        height: window.innerHeight,
         physics: {
             default: 'matter',
         },
