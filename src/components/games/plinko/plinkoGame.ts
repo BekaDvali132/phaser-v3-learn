@@ -1,6 +1,6 @@
 import {Game, type Types} from "phaser";
 import {PlinkoGameScene} from "./scenes/gameScene/PlinkoGameScene.ts";
-import {LoadingScene} from "./scenes/loadingScene/PlinkoLoadingScene.ts";
+import {PlinkoLoadingScene} from "./scenes/loadingScene/PlinkoLoadingScene.ts";
 
 interface Props {
     parent: string;
@@ -18,7 +18,7 @@ function plinkoGame({parent}: Props) {
         physics: {
             default: 'matter',
         },
-        scene: [LoadingScene, PlinkoGameScene],
+        scene: [PlinkoLoadingScene, PlinkoGameScene],
     };
 
     return new Game(config);
