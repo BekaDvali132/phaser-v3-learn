@@ -6,14 +6,34 @@ interface Props {
     parent: string;
 }
 function plinkoGame({parent}: Props) {
+    const dpr = window.devicePixelRatio || 1;
+    const parentEl = document.getElementById(parent);
+    const displayWidth = parentEl?.clientWidth || window.innerWidth;
+    const displayHeight = parentEl?.clientHeight || window.innerHeight;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.floor(displayWidth * dpr);
+    canvas.height = Math.floor(displayHeight * dpr);
+    canvas.style.width = displayWidth + 'px';
+    canvas.style.height = displayHeight + 'px';
+    
+    if (parentEl) {
+        parentEl.appendChild(canvas);
+    }
+    
     const config: Types.Core.GameConfig = {
-        type: Phaser.AUTO,
-        parent,
-        width: 1440,
-        height: 955,
+        type: Phaser.WEBGL,
+        canvas: canvas,
+        width: canvas.width,
+        height: canvas.height,
+
+        render: {
+            antialias: true,
+            pixelArt: false,
+            roundPixels: false,
+        },
         scale: {
-            mode: Phaser.Scale.FIT,
-            autoCenter: Phaser.Scale.CENTER_BOTH,
+            mode: Phaser.Scale.NONE,
         },
         physics: {
             default: 'matter',
@@ -21,7 +41,30 @@ function plinkoGame({parent}: Props) {
         scene: [PlinkoLoadingScene, PlinkoGameScene],
     };
 
-    return new Game(config);
+    const game = new Game(config);
+    
+    (game as any).dpr = dpr;
+    
+    const handleResize = () => {
+        const newDpr = window.devicePixelRatio || 1;
+        const newWidth = parentEl?.clientWidth || window.innerWidth;
+        const newHeight = parentEl?.clientHeight || window.innerHeight;
+        
+        canvas.width = Math.floor(newWidth * newDpr);
+        canvas.height = Math.floor(newHeight * newDpr);
+        canvas.style.width = newWidth + 'px';
+        canvas.style.height = newHeight + 'px';
+        
+        game.scale.resize(canvas.width, canvas.height);
+        (game as any).dpr = newDpr;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    game.events.once('destroy', () => {
+        window.removeEventListener('resize', handleResize);
+    });
+
+    return game;
 }
 
 export default plinkoGame;

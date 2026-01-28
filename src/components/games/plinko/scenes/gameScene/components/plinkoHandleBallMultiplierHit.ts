@@ -1,4 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import {getHeightScale} from "../PlinkoGameScene.ts";
 
 interface Props {
     ball: Phaser.Physics.Matter.Image,
@@ -11,41 +12,45 @@ export default function plinkoHandleBallMultiplierHit({
                                                           ball,
                                                           multiplier,
                                                           scene,
-                                                          objects
+                                                          
                                                       }: Props) {
-    // Check if ball already hit a multiplier
     if (ball.getData('hitMultiplier')) {
         return;
     }
 
     ball.setData('hitMultiplier', true);
 
-    // Fade out and destroy ball
+    ball.setData('markedForDestroy', true);
+
     scene.tweens.add({
         targets: ball,
         alpha: 0,
-        scale: 0.5,
         duration: 150,
-        ease: 'Power2',
-        onComplete: () => {
-            const index = objects.balls.indexOf(ball);
-            if (index > -1) {
-                objects.balls.splice(index, 1);
-            }
-            ball.destroy();
-        }
+        ease: 'Power2'
     });
 
-    // Drop down 10 pixels and bounce back up
+    // Check if multiplier is already animating
+    if (multiplier.getData('isAnimating')) {
+        return;
+    }
+
+    // Get stored base Y position and scale
+    const baseY = multiplier.getData('baseY') || multiplier.y;
+    const scale = getHeightScale(scene);
+    const bounceDistance = 10 * scale;
+
+    // Mark as animating
+    multiplier.setData('isAnimating', true);
+
     scene.tweens.add({
         targets: multiplier,
-        y: 740,
+        y: baseY + bounceDistance,
         duration: 150,
         ease: 'Power2.easeOut',
         yoyo: true,
-        yoyoDuration: 150,
         onComplete: () => {
-            multiplier.setY(730);
+            multiplier.setY(baseY);
+            multiplier.setData('isAnimating', false);
         }
     });
 }

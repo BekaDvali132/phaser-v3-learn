@@ -5,21 +5,25 @@ interface Props {
     scene: Phaser.Scene,
 }
 export default function plinkoCreateVideoBackground({objects, scene}: Props) {
+    const width = scene.scale.width;
+    const height = scene.scale.height;
 
-    objects.backgroundVideo = scene.add.video(0, 0, 'backgroundVideo');
+    objects.backgroundVideo = scene.add.video(width / 2, height / 2, 'backgroundVideo');
+    objects.backgroundVideo.setOrigin(0.5, 0.5);
 
     // Wait for video to load to get correct dimensions
     objects.backgroundVideo.on('created', () => {
-        const scaleX = scene.sys.canvas.width / objects.backgroundVideo!.width;
-        const scaleY = scene.sys.canvas.height / objects.backgroundVideo!.height;
+        const currentWidth = scene.scale.width;
+        const currentHeight = scene.scale.height;
+        const scaleX = currentWidth / objects.backgroundVideo!.width;
+        const scaleY = currentHeight / objects.backgroundVideo!.height;
         const scale = Math.max(scaleX, scaleY);
 
         objects.backgroundVideo!.setScale(scale);
         objects.backgroundVideo!.setPosition(
-            scene.sys.canvas.width / 2,
-            scene.sys.canvas.height / 2
+            currentWidth / 2,
+            currentHeight / 2
         );
-        objects.backgroundVideo!.setOrigin(0.5, 0.5);
     });
 
     objects.backgroundVideo.setDepth(-1);

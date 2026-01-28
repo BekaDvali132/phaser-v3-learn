@@ -2,11 +2,9 @@ import { useEffect, useRef } from "react";
 
 interface Props {
   gameInstance: ({ parent }: { parent: string }) => Phaser.Game;
-  width?: number;
-  height?: number;
 }
 
-function PhaserGameRender({ gameInstance, width, height }: Props) {
+function PhaserGameRender({ gameInstance }: Props) {
   const gameRef = useRef<Phaser.Game | null>(null);
 
   useEffect(() => {
@@ -22,16 +20,10 @@ function PhaserGameRender({ gameInstance, width, height }: Props) {
     };
   }, [gameInstance]);
 
-  useEffect(() => {
-    if (!gameRef.current) return;
-
-    gameRef.current.scale.refresh();
-  }, [width, height]);
-
   return (
     <div
       id={"phaser-container"}
-      style={{ width, height, overflow: "hidden" }}
+      style={{ width: "100vw", height: "100vh", overflow: "hidden" }}
     ></div>
   );
 }

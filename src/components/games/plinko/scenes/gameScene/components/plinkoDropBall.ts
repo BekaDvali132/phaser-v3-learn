@@ -1,4 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import {getHeightScale} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType;
@@ -9,11 +10,15 @@ interface Props {
 }
 
 export default function plinkoDropBall({ objects, this: scene, ballPath }: Props): Phaser.Physics.Matter.Image{
-    const ballSize = 32;
+    const width = scene.scale.width;
+    const centerX = width / 2;
+    const scale = getHeightScale(scene);
+    
+    // Scale based on height
+    const ballSize = 32 * scale;
     const ballRadius = ballSize / 2;
-
-    const dropX = 720;
-    const dropY = 60;
+    const dropX = centerX;
+    const dropY = 60 * scale;
 
     const ball = scene.matter.add.image(dropX, dropY, 'lemon', undefined, {
         shape: {type: 'circle', radius: ballRadius},
