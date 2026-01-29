@@ -14,16 +14,20 @@ export type PlinkoGameObjectsType = {
     dropButtonText: Phaser.GameObjects.Text | null,
     gameContainer: Phaser.GameObjects.Container | null,
 }
-export const BASE_CONTENT_HEIGHT = 900;
+
+// game dimensions
+export const VIRTUAL_WIDTH = 800;
+export const VIRTUAL_HEIGHT = 900;
 
 export function getDPR(scene: Phaser.Scene): number {
     return (scene.game as any).dpr || window.devicePixelRatio || 1;
 }
 
-export function getHeightScale(scene: Phaser.Scene): number {
+export function getGameZoom(scene: Phaser.Scene): number {
     const dpr = getDPR(scene);
+    const cssWidth = scene.scale.width / dpr;
     const cssHeight = scene.scale.height / dpr;
-    return Math.min(1, cssHeight / BASE_CONTENT_HEIGHT) * dpr;
+    return Math.min(cssWidth / VIRTUAL_WIDTH, cssHeight / VIRTUAL_HEIGHT) * dpr;
 }
 
 export class PlinkoGameScene extends Phaser.Scene {
@@ -31,7 +35,6 @@ export class PlinkoGameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'PlinkoGameScene' });
     }
-    private prevCenterX: number = 0;
 
     objects: PlinkoGameObjectsType = {
         pegs: [],
@@ -47,23 +50,17 @@ export class PlinkoGameScene extends Phaser.Scene {
     preload() {}
 
     create() {
-        const width = this.scale.width;
-        const height = this.scale.height;
-        const scale = getHeightScale(this);
-
-        this.matter.world.setBounds(0, 0, width, height);
-        (this.matter.world.engine as any).gravity.y = 1.5 * scale;
-
-        this.prevCenterX = width / 2;
+        this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        (this.matter.world.engine as any).gravity.y = 1.5;
 
         plinkoCreateVideoBackground({
             objects: this.objects,
             scene: this
         });
 
-        const centerX = width / 2;
-        const wheelSize = 200 * scale;
-        this.objects.wheel = this.add.image(centerX, -5 * scale, 'wheel').setDisplaySize(wheelSize, wheelSize);
+        const centerX = VIRTUAL_WIDTH / 2;
+        
+        this.objects.wheel = this.add.image(centerX, -5, 'wheel').setDisplaySize(200, 200);
 
         plinkoCreatePegs({objects: this.objects, this: this});
       
@@ -74,15 +71,11 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        const buttonY = 850 * scale;
-        const buttonWidth = 150 * scale;
-        const buttonHeight = 50 * scale;
-
-        this.objects.dropButton = this.add.rectangle(centerX, buttonY, buttonWidth, buttonHeight, 0x4CAF50);
+        this.objects.dropButton = this.add.rectangle(centerX, 850, 150, 50, 0x4CAF50);
         this.objects.dropButton.setInteractive({useHandCursor: true});
 
-        this.objects.dropButtonText = this.add.text(centerX, buttonY, 'DROP BALL', {
-            fontSize: `${20 * scale}px`,
+        this.objects.dropButtonText = this.add.text(centerX, 850, 'DROP BALL', {
+            fontSize: '20px',
             color: '#ffffff'
         }).setOrigin(0.5);
 
@@ -94,67 +87,30 @@ export class PlinkoGameScene extends Phaser.Scene {
             });
         });
 
+        this.syncCameraZoom();
         this.scale.on('resize', this.handleResize, this);
     }
 
-    handleResize(gameSize: Phaser.Structs.Size) {
-        const width = gameSize.width;
-        const height = gameSize.height;
+    syncCameraZoom() {
+        const zoom = getGameZoom(this);
         const dpr = getDPR(this);
-        const cssHeight = height / dpr;
-        const scale = Math.min(1, cssHeight / BASE_CONTENT_HEIGHT) * dpr;
-        const centerX = width / 2;
-        const centerXOffset = centerX - this.prevCenterX;
-
-        this.matter.world.setBounds(0, 0, width, height);
-
+        const screenWidth = this.scale.width / dpr;
+        const screenHeight = this.scale.height / dpr;
+        
+        this.cameras.main.setZoom(zoom);
+        this.cameras.main.centerOn(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
+        
         if (this.objects.backgroundVideo) {
-            const scaleX = width / this.objects.backgroundVideo.width;
-            const scaleY = height / this.objects.backgroundVideo.height;
-            const bgScale = Math.max(scaleX, scaleY);
+            const scaleX = (screenWidth * dpr) / this.objects.backgroundVideo.width;
+            const scaleY = (screenHeight * dpr) / this.objects.backgroundVideo.height;
+            const bgScale = Math.max(scaleX, scaleY) / zoom;
             this.objects.backgroundVideo.setScale(bgScale);
-            this.objects.backgroundVideo.setPosition(centerX, height / 2);
+            this.objects.backgroundVideo.setPosition(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
         }
+    }
 
-        this.objects.balls.forEach(ball => {
-            ball.setPosition(ball.x + centerXOffset, ball.y);
-        });
-
-        if (this.objects.wheel) {
-            const wheelSize = 200 * scale;
-            this.objects.wheel.setPosition(centerX, -5 * scale);
-            this.objects.wheel.setDisplaySize(wheelSize, wheelSize);
-        }
-
-        this.objects.pegs.forEach(peg => peg.destroy());
-        this.objects.pegs = [];
-        plinkoCreatePegs({objects: this.objects, this: this});
-
-        this.objects.multipliers.forEach(multiplier => {
-            const sensor = multiplier.getData('sensor');
-            if (sensor) {
-                this.matter.world.remove(sensor);
-            }
-            multiplier.destroy();
-        });
-        this.objects.multipliers = [];
-        plinkoCreateMultipliers({objects: this.objects, this: this});
-
-        const buttonY = 850 * scale;
-        const buttonWidth = 150 * scale;
-        const buttonHeight = 50 * scale;
-
-        if (this.objects.dropButton) {
-            this.objects.dropButton.setPosition(centerX, buttonY);
-            this.objects.dropButton.setSize(buttonWidth, buttonHeight);
-        }
-
-        if (this.objects.dropButtonText) {
-            this.objects.dropButtonText.setPosition(centerX, buttonY);
-            this.objects.dropButtonText.setFontSize(20 * scale);
-        }
-
-        this.prevCenterX = centerX;
+    handleResize() {
+        this.syncCameraZoom();
     }
 
     update() {

@@ -1,5 +1,4 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
-import {getHeightScale} from "../PlinkoGameScene.ts";
 
 interface Props {
     ball: Phaser.Physics.Matter.Image,
@@ -29,15 +28,12 @@ export default function plinkoHandleBallMultiplierHit({
         ease: 'Power2'
     });
 
-    // Check if multiplier is already animating
     if (multiplier.getData('isAnimating')) {
         return;
     }
 
-    // Get stored base Y position and scale
     const baseY = multiplier.getData('baseY') || multiplier.y;
-    const scale = getHeightScale(scene);
-    const bounceDistance = 10 * scale;
+    const bounceDistance = 10;
 
     // Mark as animating
     multiplier.setData('isAnimating', true);

@@ -1,5 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
-import {getHeightScale} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType;
@@ -10,15 +10,12 @@ interface Props {
 }
 
 export default function plinkoDropBall({ objects, this: scene, ballPath }: Props): Phaser.Physics.Matter.Image{
-    const width = scene.scale.width;
-    const centerX = width / 2;
-    const scale = getHeightScale(scene);
+    const centerX = VIRTUAL_WIDTH / 2;
     
-    // Scale based on height
-    const ballSize = 32 * scale;
+    const ballSize = 32;
     const ballRadius = ballSize / 2;
     const dropX = centerX;
-    const dropY = 60 * scale;
+    const dropY = 60;
 
     const ball = scene.matter.add.image(dropX, dropY, 'lemon', undefined, {
         shape: {type: 'circle', radius: ballRadius},
@@ -45,7 +42,6 @@ export default function plinkoDropBall({ objects, this: scene, ballPath }: Props
         }
     });
 
-    // Store the path and current row index in the ball's data
     ball.setData('path', ballPath);
     ball.setData('currentRow', 0);
 

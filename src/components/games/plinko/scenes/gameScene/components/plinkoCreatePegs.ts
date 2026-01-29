@@ -1,5 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
-import {getHeightScale} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType;
@@ -11,16 +11,12 @@ interface Props {
 export default function createPegs({ objects, this: scene }: Props): void{
     objects.pegs = [];
     
-    const width = scene.scale.width;
-    const centerX = width / 2;
-    const scale = getHeightScale(scene);
-    
-    // Scale based on height
+    const centerX = VIRTUAL_WIDTH / 2;
     const rows = 14;
-    const startY = 120 * scale;
-    const horizontalGap = 48 * scale;
-    const verticalGap = 44 * scale;
-    const pegDiameter = 16 * scale;
+    const startY = 120;
+    const horizontalGap = 48;
+    const verticalGap = 44;
+    const pegDiameter = 16;
     const pegRadius = pegDiameter / 2;
 
     for (let row = 0; row < rows; row++) {
@@ -45,8 +41,6 @@ export default function createPegs({ objects, this: scene }: Props): void{
             }, {
                 isStatic: true
             });
-
-            // Store the row index in the peg's data
             peg.setData('rowIndex', row);
 
             objects.pegs.push(peg);
