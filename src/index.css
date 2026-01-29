@@ -40,7 +40,6 @@ canvas {
 
 @layer base {
   :root {
-    scrollbar-gutter: stable;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
