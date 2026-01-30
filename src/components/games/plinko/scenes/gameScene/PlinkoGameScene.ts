@@ -1,8 +1,9 @@
 import plinkoCreatePegs from "./components/plinkoCreatePegs.ts";
-import plinkoDropBall from "./components/plinkoDropBall.ts";
 import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
 import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
+import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
+import plinkoSetupDropButton from "./components/plinkoSetupDropButton.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -19,21 +20,11 @@ export type PlinkoGameObjectsType = {
 export const VIRTUAL_WIDTH = 800;
 export const VIRTUAL_HEIGHT = 900;
 
-export function getDPR(scene: Phaser.Scene): number {
-    return (scene.game as any).dpr || window.devicePixelRatio || 1;
-}
-
-export function getGameZoom(scene: Phaser.Scene): number {
-    const dpr = getDPR(scene);
-    const cssWidth = scene.scale.width / dpr;
-    const cssHeight = scene.scale.height / dpr;
-    return Math.min(cssWidth / VIRTUAL_WIDTH, cssHeight / VIRTUAL_HEIGHT) * dpr;
-}
 
 export class PlinkoGameScene extends Phaser.Scene {
 
     constructor() {
-        super({ key: 'PlinkoGameScene' });
+        super({key: 'PlinkoGameScene'});
     }
 
     objects: PlinkoGameObjectsType = {
@@ -47,7 +38,15 @@ export class PlinkoGameScene extends Phaser.Scene {
         gameContainer: null,
     }
 
-    preload() {}
+    handleResize() {
+        plinkoSyncCameraZoom({
+            scene: this,
+            objects: this.objects
+        });
+    }
+
+    preload() {
+    }
 
     create() {
         this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
@@ -59,11 +58,11 @@ export class PlinkoGameScene extends Phaser.Scene {
         });
 
         const centerX = VIRTUAL_WIDTH / 2;
-        
+
         this.objects.wheel = this.add.image(centerX, -5, 'wheel').setDisplaySize(200, 200);
 
         plinkoCreatePegs({objects: this.objects, this: this});
-      
+
         plinkoCreateMultipliers({objects: this.objects, this: this});
 
         plinkoSetupCollissions({
@@ -71,46 +70,14 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        this.objects.dropButton = this.add.rectangle(centerX, 850, 150, 50, 0x4CAF50);
-        this.objects.dropButton.setInteractive({useHandCursor: true});
+        plinkoSetupDropButton({
+            scene: this,
+            objects: this.objects
+        })
 
-        this.objects.dropButtonText = this.add.text(centerX, 850, 'DROP BALL', {
-            fontSize: '20px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
+        this.handleResize();
 
-        this.objects.dropButton.on('pointerdown', () => {
-            plinkoDropBall({
-                this: this,
-                objects: this.objects,
-                ballPath: [1, 1 ,1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
-            });
-        });
-
-        this.syncCameraZoom();
         this.scale.on('resize', this.handleResize, this);
-    }
-
-    syncCameraZoom() {
-        const zoom = getGameZoom(this);
-        const dpr = getDPR(this);
-        const screenWidth = this.scale.width / dpr;
-        const screenHeight = this.scale.height / dpr;
-        
-        this.cameras.main.setZoom(zoom);
-        this.cameras.main.centerOn(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
-        
-        if (this.objects.backgroundVideo) {
-            const scaleX = (screenWidth * dpr) / this.objects.backgroundVideo.width;
-            const scaleY = (screenHeight * dpr) / this.objects.backgroundVideo.height;
-            const bgScale = Math.max(scaleX, scaleY) / zoom;
-            this.objects.backgroundVideo.setScale(bgScale);
-            this.objects.backgroundVideo.setPosition(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
-        }
-    }
-
-    handleResize() {
-        this.syncCameraZoom();
     }
 
     update() {
