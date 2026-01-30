@@ -1,25 +1,30 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH, VIRTUAL_HEIGHT} from "../PlinkoGameScene.ts";
+import {getDPR, getGameZoom} from "./plinkoSyncCameraZoom.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType,
     scene: Phaser.Scene,
 }
 export default function plinkoCreateVideoBackground({objects, scene}: Props) {
+    const centerX = VIRTUAL_WIDTH / 2;
+    const centerY = VIRTUAL_HEIGHT / 2;
 
-    objects.backgroundVideo = scene.add.video(0, 0, 'backgroundVideo');
+    objects.backgroundVideo = scene.add.video(centerX, centerY, 'backgroundVideo');
+    objects.backgroundVideo.setOrigin(0.5, 0.5);
 
-    // Wait for video to load to get correct dimensions
     objects.backgroundVideo.on('created', () => {
-        const scaleX = scene.sys.canvas.width / objects.backgroundVideo!.width;
-        const scaleY = scene.sys.canvas.height / objects.backgroundVideo!.height;
-        const scale = Math.max(scaleX, scaleY);
-
-        objects.backgroundVideo!.setScale(scale);
-        objects.backgroundVideo!.setPosition(
-            scene.sys.canvas.width / 2,
-            scene.sys.canvas.height / 2
-        );
-        objects.backgroundVideo!.setOrigin(0.5, 0.5);
+        const dpr = getDPR(scene);
+        const zoom = getGameZoom(scene);
+        const screenWidth = scene.scale.width / dpr;
+        const screenHeight = scene.scale.height / dpr;
+        
+        const scaleX = (screenWidth * dpr) / objects.backgroundVideo!.width;
+        const scaleY = (screenHeight * dpr) / objects.backgroundVideo!.height;
+        const bgScale = Math.max(scaleX, scaleY) / zoom;
+        
+        objects.backgroundVideo!.setScale(bgScale);
+        objects.backgroundVideo!.setPosition(centerX, centerY);
     });
 
     objects.backgroundVideo.setDepth(-1);

@@ -1,4 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType;
@@ -9,6 +10,8 @@ interface Props {
 
 export default function createPegs({ objects, this: scene }: Props): void{
     objects.pegs = [];
+    
+    const centerX = VIRTUAL_WIDTH / 2;
     const rows = 14;
     const startY = 120;
     const horizontalGap = 48;
@@ -18,7 +21,7 @@ export default function createPegs({ objects, this: scene }: Props): void{
 
     for (let row = 0; row < rows; row++) {
         const pegsInRow = row + 3;
-        const startX = 720 - (pegsInRow - 1) * horizontalGap / 2;
+        const startX = centerX - (pegsInRow - 1) * horizontalGap / 2;
 
         for (let col = 0; col < pegsInRow; col++) {
             const x = startX + col * horizontalGap;
@@ -38,8 +41,6 @@ export default function createPegs({ objects, this: scene }: Props): void{
             }, {
                 isStatic: true
             });
-
-            // Store the row index in the peg's data
             peg.setData('rowIndex', row);
 
             objects.pegs.push(peg);
