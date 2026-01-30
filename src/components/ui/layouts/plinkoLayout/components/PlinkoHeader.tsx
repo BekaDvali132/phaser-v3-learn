@@ -2,7 +2,7 @@ import PlinkoHeaderControls from "./PlinkoHeaderControls.tsx";
 
 function PlinkoHeader() {
     return (
-        <header className={'py-[14px] z-10 px-8 flex items-center justify-between'}>
+        <header className={'py-[14px] z-10 my-container flex items-center justify-between'}>
             <img src="/plinkoGameAssets/plinkoLogo.webp" width={164} height={80} alt="Logo"/>
             <div className={'flex gap-5 items-center'}>
                 <div className="flex flex-col gap-[2px]">

@@ -18,7 +18,7 @@ export type PlinkoGameObjectsType = {
 
 // game dimensions
 export const VIRTUAL_WIDTH = 800;
-export const VIRTUAL_HEIGHT = 900;
+export const VIRTUAL_HEIGHT = 1000;
 
 
 export class PlinkoGameScene extends Phaser.Scene {

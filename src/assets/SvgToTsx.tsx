@@ -4,3 +4,5 @@
 export { default as FullscreenIcon } from "./fullscreen.svg?react";
 export { default as SettingsIcon } from "./settings.svg?react";
 export { default as NetworkIcon } from "./network.svg?react";
+export { default as ReflectiveMinusIcon } from "./reflectiveMinus.svg?react";
+export { default as ReflectivePlusIcon } from "./reflectivePlus.svg?react";
