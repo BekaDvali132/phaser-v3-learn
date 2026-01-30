@@ -1,5 +1,5 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
-import {VIRTUAL_WIDTH, VIRTUAL_HEIGHT} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH, VIRTUAL_HEIGHT, getDPR, getGameZoom} from "../PlinkoGameScene.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType,
@@ -13,11 +13,16 @@ export default function plinkoCreateVideoBackground({objects, scene}: Props) {
     objects.backgroundVideo.setOrigin(0.5, 0.5);
 
     objects.backgroundVideo.on('created', () => {
-        const scaleX = VIRTUAL_WIDTH / objects.backgroundVideo!.width;
-        const scaleY = VIRTUAL_HEIGHT / objects.backgroundVideo!.height;
-        const scale = Math.max(scaleX, scaleY);
-
-        objects.backgroundVideo!.setScale(scale);
+        const dpr = getDPR(scene);
+        const zoom = getGameZoom(scene);
+        const screenWidth = scene.scale.width / dpr;
+        const screenHeight = scene.scale.height / dpr;
+        
+        const scaleX = (screenWidth * dpr) / objects.backgroundVideo!.width;
+        const scaleY = (screenHeight * dpr) / objects.backgroundVideo!.height;
+        const bgScale = Math.max(scaleX, scaleY) / zoom;
+        
+        objects.backgroundVideo!.setScale(bgScale);
         objects.backgroundVideo!.setPosition(centerX, centerY);
     });
 
