@@ -1,5 +1,6 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
-import {VIRTUAL_WIDTH, VIRTUAL_HEIGHT, getDPR, getGameZoom} from "../PlinkoGameScene.ts";
+import {VIRTUAL_WIDTH, VIRTUAL_HEIGHT} from "../PlinkoGameScene.ts";
+import {getDPR, getGameZoom} from "./plinkoSyncCameraZoom.ts";
 
 interface Props {
     objects: PlinkoGameObjectsType,
