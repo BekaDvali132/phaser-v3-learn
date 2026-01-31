@@ -1,4 +1,4 @@
-import plinkoDropBall from "./plinkoDropBall.ts";
+import plinkoDropBall, { getRandomBallImage } from "./plinkoDropBall.ts";
 import {type PlinkoGameObjectsType, VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
 
 interface Props {
@@ -24,7 +24,8 @@ export default function plinkoSetupDropButton({scene, objects}: Props) {
         plinkoDropBall({
             this: scene,
             objects: objects,
-            ballPath: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+            ballPath: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            ballImage: getRandomBallImage()
         });
     });
 }

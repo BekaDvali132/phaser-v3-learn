@@ -4,10 +4,13 @@ import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
 import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import plinkoSetupDropButton from "./components/plinkoSetupDropButton.ts";
+import plinkoUpdateCageBalls, { plinkoAddCageBalls } from "./components/plinkoWheelCageBalls.ts";
+import plinkoCreateWheelCage, { CAGE_CENTER_X, CAGE_CENTER_Y, CAGE_RADIUS } from "./components/plinkoCreateWheelCage.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
     balls: Phaser.Physics.Matter.Image[],
+    cageBalls: Phaser.Physics.Matter.Image[],
     wheel: Phaser.GameObjects.Image | null,
     multipliers: Phaser.GameObjects.Image[],
     backgroundVideo: Phaser.GameObjects.Video | null,
@@ -30,6 +33,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     objects: PlinkoGameObjectsType = {
         pegs: [],
         balls: [],
+        cageBalls: [],
         wheel: null,
         multipliers: [],
         backgroundVideo: null,
@@ -50,16 +54,25 @@ export class PlinkoGameScene extends Phaser.Scene {
 
     create() {
         this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        (this.matter.world.engine as any).gravity.y = 1.5;
+         
+        (this.matter.world.engine as unknown as { gravity: { y: number } }).gravity.y = 1.5;
 
         plinkoCreateVideoBackground({
             objects: this.objects,
             scene: this
         });
 
-        const centerX = VIRTUAL_WIDTH / 2;
-
-        this.objects.wheel = this.add.image(centerX, -5, 'wheel').setDisplaySize(200, 200);
+        const wheelCage = plinkoCreateWheelCage({ scene: this });
+        this.objects.wheel = wheelCage.wheel;
+        
+        plinkoAddCageBalls({
+            scene: this,
+            cageBalls: this.objects.cageBalls,
+            cageCenterX: CAGE_CENTER_X,
+            cageCenterY: CAGE_CENTER_Y,
+            cageRadius: CAGE_RADIUS,
+            count: 8
+        });
 
         plinkoCreatePegs({objects: this.objects, this: this});
 
@@ -84,6 +97,15 @@ export class PlinkoGameScene extends Phaser.Scene {
         if (this.objects.wheel) {
             this.objects.wheel.rotation += 0.02;
         }
+        
+        plinkoUpdateCageBalls({
+            scene: this,
+            cageBalls: this.objects.cageBalls,
+            cageCenterX: CAGE_CENTER_X,
+            cageCenterY: CAGE_CENTER_Y,
+            cageRadius: CAGE_RADIUS
+        });
+        
         this.objects.balls = this.objects.balls.filter(ball => {
             if (ball.getData('markedForDestroy') && ball.alpha <= 0) {
                 this.tweens.killTweensOf(ball);

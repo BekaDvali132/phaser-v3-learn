@@ -39,9 +39,16 @@ export default function createPegs({ objects, this: scene }: Props): void{
                 type: 'circle',
                 radius: pegRadius
             }, {
-                isStatic: true
+                isStatic: true,
+                restitution: 0,   // No bounce from pegs
+                friction: 0,      // No friction
+                collisionFilter: {
+                    category: 0x0001,
+                    mask: 0x0002
+                }
             });
             peg.setData('rowIndex', row);
+            peg.setData('colIndex', col);
 
             objects.pegs.push(peg);
         }
