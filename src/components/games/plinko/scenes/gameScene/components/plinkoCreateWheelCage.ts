@@ -34,7 +34,7 @@ export default function plinkoCreateWheelCage({ scene }: CreateWheelCageProps): 
             collisionFilter: {
                 category: 0x0008,
                 mask: 0x0010
-            }
+            },
         });
         cageSegments.push(segment);
     }

@@ -4,8 +4,9 @@ import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
 import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import plinkoSetupDropButton from "./components/plinkoSetupDropButton.ts";
-import plinkoUpdateCageBalls, { plinkoAddCageBalls } from "./components/plinkoWheelCageBalls.ts";
 import plinkoCreateWheelCage, { CAGE_CENTER_X, CAGE_CENTER_Y, CAGE_RADIUS } from "./components/plinkoCreateWheelCage.ts";
+import {plinkoCreateCageBalls} from "./components/plinkoCreateCageBalls.ts";
+import plinkoUpdateCageBalls from "./components/plinkoUpdateCageBalls.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -64,8 +65,8 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         const wheelCage = plinkoCreateWheelCage({ scene: this });
         this.objects.wheel = wheelCage.wheel;
-        
-        plinkoAddCageBalls({
+
+        plinkoCreateCageBalls({
             scene: this,
             cageBalls: this.objects.cageBalls,
             cageCenterX: CAGE_CENTER_X,
@@ -97,7 +98,7 @@ export class PlinkoGameScene extends Phaser.Scene {
         if (this.objects.wheel) {
             this.objects.wheel.rotation += 0.02;
         }
-        
+
         plinkoUpdateCageBalls({
             scene: this,
             cageBalls: this.objects.cageBalls,
