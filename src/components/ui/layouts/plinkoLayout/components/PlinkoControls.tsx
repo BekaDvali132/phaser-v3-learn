@@ -1,8 +1,9 @@
 import PlinkoControl from "./PlinkoControl.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 
 function PlinkoControls() {
+    const [show, setShow] = useState(false);
     const [rows, setRows] = useState(14);
     const [riskCost, setRiskCost] = useState(0.1);
     const [fruits, setFruits] = useState(1);
@@ -31,8 +32,20 @@ function PlinkoControls() {
         setFruits((prev) => prev - 1);
     }
 
+    useEffect(() => {
+        gameEvents.on('gameLoaded', () => {
+            setShow(true);
+        });
+
+        return () => {
+            gameEvents.off('gameLoaded', () => {
+                setShow(false)
+            })
+        }
+    },[])
+
     return (
-        <div className={'flex w-full my-container absolute bottom-[76px] gap-2 select-none'}>
+        <div className={`flex w-full my-container absolute bottom-[76px] gap-2 select-none duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <PlinkoControl handleDecrease={handleRowDecrease} handleIncrease={handleRowsIncrease}
                            increaseDisabled={rows >= 14} decreaseDisabled={rows <= 1}>
                 <div className="flex flex-col gap-2">

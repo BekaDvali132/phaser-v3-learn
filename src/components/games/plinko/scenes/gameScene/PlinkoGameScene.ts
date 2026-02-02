@@ -3,9 +3,6 @@ import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
 import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
-import plinkoCreateWheelCage, {CAGE_CENTER_X, CAGE_CENTER_Y, CAGE_RADIUS} from "./components/plinkoCreateWheelCage.ts";
-import {plinkoCreateCageBalls} from "./components/plinkoCreateCageBalls.ts";
-import plinkoUpdateCageBalls from "./components/plinkoUpdateCageBalls.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
@@ -14,7 +11,7 @@ export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
     balls: Phaser.Physics.Matter.Image[],
     cageBalls: Phaser.Physics.Matter.Image[],
-    wheel: Phaser.GameObjects.Image | null,
+    wheel: Phaser.GameObjects.Video | null,
     multipliers: Phaser.GameObjects.Image[],
     backgroundVideo: Phaser.GameObjects.Video | null,
     dropButton: Phaser.GameObjects.Rectangle | null,
@@ -25,6 +22,8 @@ export type PlinkoGameObjectsType = {
 // game dimensions
 export const VIRTUAL_WIDTH = 800;
 export const VIRTUAL_HEIGHT = 1000;
+export const WHEEL_CENTER_X = VIRTUAL_WIDTH / 2;
+export const WHEEL_CENTER_Y = -5;
 
 
 export class PlinkoGameScene extends Phaser.Scene {
@@ -74,17 +73,9 @@ export class PlinkoGameScene extends Phaser.Scene {
             scene: this
         });
 
-        const wheelCage = plinkoCreateWheelCage({scene: this});
-        this.objects.wheel = wheelCage.wheel;
-
-        plinkoCreateCageBalls({
-            scene: this,
-            cageBalls: this.objects.cageBalls,
-            cageCenterX: CAGE_CENTER_X,
-            cageCenterY: CAGE_CENTER_Y,
-            cageRadius: CAGE_RADIUS,
-            count: 8
-        });
+        this.objects.wheel = this.add.video(WHEEL_CENTER_X, WHEEL_CENTER_Y, 'wheel');
+        this.objects.wheel.setDisplaySize(125, 125);
+        this.objects.wheel.play(true);
 
         plinkoCreatePegs({objects: this.objects, this: this});
 
@@ -100,20 +91,14 @@ export class PlinkoGameScene extends Phaser.Scene {
         this.handleResize();
 
         this.scale.on('resize', this.handleResize, this);
+
+        gameEvents.emit('gameLoaded');
     }
 
     update() {
         if (this.objects.wheel) {
             this.objects.wheel.rotation += 0.02;
         }
-
-        plinkoUpdateCageBalls({
-            scene: this,
-            cageBalls: this.objects.cageBalls,
-            cageCenterX: CAGE_CENTER_X,
-            cageCenterY: CAGE_CENTER_Y,
-            cageRadius: CAGE_RADIUS
-        });
 
         this.objects.balls = this.objects.balls.filter(ball => {
             if (ball.getData('markedForDestroy') && ball.alpha <= 0) {

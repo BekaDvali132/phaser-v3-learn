@@ -68,7 +68,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         // Load all game assets
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
         this.load.video('backgroundVideo', '/plinkoGameAssets/plinkoBackground.mp4');
-        this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
+        this.load.video('wheel', '/plinkoGameAssets/plinkoWheel.webm');
         this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
             frameWidth: 128,  // Width of each multiplier frame
             frameHeight: 92 // Height of each multiplier frame
