@@ -42,7 +42,8 @@ function plinkoGame({parent}: Props) {
     };
 
     const game = new Game(config);
-    
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (game as any).dpr = dpr;
     
     const handleResize = () => {
@@ -56,6 +57,7 @@ function plinkoGame({parent}: Props) {
         canvas.style.height = newHeight + 'px';
         
         game.scale.resize(canvas.width, canvas.height);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (game as any).dpr = newDpr;
     };
     

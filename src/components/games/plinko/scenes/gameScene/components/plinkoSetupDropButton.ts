@@ -7,7 +7,9 @@ interface Props {
         matter: Phaser.Physics.Matter.MatterPhysics;
     };
 }
-
+function generateRandomBallPath(size: number): number[] {
+    return Array.from({ length: size }, () => Math.random() < 0.5 ? 0 : 1);
+}
 
 export default function plinkoSetupDropButton({scene, objects}: Props) {
     const centerX = VIRTUAL_WIDTH / 2;
@@ -24,7 +26,7 @@ export default function plinkoSetupDropButton({scene, objects}: Props) {
         plinkoDropBall({
             this: scene,
             objects: objects,
-            ballPath: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            ballPath: generateRandomBallPath(14),
             ballImage: getRandomBallImage()
         });
     });

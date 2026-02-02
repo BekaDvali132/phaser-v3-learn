@@ -44,7 +44,6 @@ export class RunnerGameScene extends Phaser.Scene {
 
   hitBomb(
     player: ArcadeCallbackObject,
-    _bomb: ArcadeCallbackObject
   ) {
     this.physics.pause();
 

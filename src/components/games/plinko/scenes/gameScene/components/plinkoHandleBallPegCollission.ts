@@ -13,6 +13,36 @@ export default function plinkoHandleBallPegCollission(
     hitPegs.add(pegId);
     ball.setData('hitPegs', hitPegs);
 
+    const purple = 0xD8B4FE;
+    peg.setTint(purple);
+    
+    const glow = scene.add.graphics();
+    glow.setPosition(peg.x, peg.y);
+    glow.setDepth(peg.depth - 1);
+    glow.setBlendMode(Phaser.BlendModes.ADD);
+    
+    const glowColor = 0xa233ea 
+    const steps = 12;
+    const maxRadius = 25;
+    for (let i = steps; i >= 0; i--) {
+        const t = i / steps;
+        const alpha = 0.03 * (1 - t * t);
+        const radius = maxRadius * (0.4 + 0.6 * t);
+        glow.fillStyle(glowColor, alpha);
+        glow.fillCircle(0, 0, radius);
+    }
+    
+    scene.tweens.add({
+        targets: glow,
+        alpha: 0,
+        duration: 350,
+        ease: 'Sine.easeOut',
+        onComplete: () => {
+            glow.destroy();
+            peg.clearTint();
+        }
+    });
+
     const path = ball.getData('path') as number[];
     const pegRowIndex = peg.getData('rowIndex') as number;
 
