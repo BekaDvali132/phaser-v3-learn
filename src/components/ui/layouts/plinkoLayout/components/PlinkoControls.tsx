@@ -1,5 +1,6 @@
 import PlinkoControl from "./PlinkoControl.tsx";
 import {useState} from "react";
+import {gameEvents} from "../../../../../utils/gameEvents.ts";
 
 function PlinkoControls() {
     const [rows, setRows] = useState(14);
@@ -68,6 +69,9 @@ function PlinkoControls() {
                 autobet
             </button>
             <button
+                onClick={() => {
+                    gameEvents.emit('dropBall');
+                }}
                 type={'button'}
                 className={'h-[66px] px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
             >

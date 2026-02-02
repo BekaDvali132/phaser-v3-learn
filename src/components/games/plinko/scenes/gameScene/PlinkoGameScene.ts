@@ -3,10 +3,12 @@ import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
 import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
-import plinkoSetupDropButton from "./components/plinkoSetupDropButton.ts";
-import plinkoCreateWheelCage, { CAGE_CENTER_X, CAGE_CENTER_Y, CAGE_RADIUS } from "./components/plinkoCreateWheelCage.ts";
+import plinkoCreateWheelCage, {CAGE_CENTER_X, CAGE_CENTER_Y, CAGE_RADIUS} from "./components/plinkoCreateWheelCage.ts";
 import {plinkoCreateCageBalls} from "./components/plinkoCreateCageBalls.ts";
 import plinkoUpdateCageBalls from "./components/plinkoUpdateCageBalls.ts";
+import {gameEvents} from "../../../../../utils/gameEvents.ts";
+import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
+import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -53,9 +55,18 @@ export class PlinkoGameScene extends Phaser.Scene {
     preload() {
     }
 
+    handleDropBall() {
+        plinkoDropBall({
+            this: this,
+            objects: this.objects,
+            ballPath: plinkoGenerateRandomBallPath(14),
+            ballImage: getRandomBallImage()
+        });
+    }
+
     create() {
         this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-         
+
         (this.matter.world.engine as unknown as { gravity: { y: number } }).gravity.y = 1.5;
 
         plinkoCreateVideoBackground({
@@ -63,7 +74,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             scene: this
         });
 
-        const wheelCage = plinkoCreateWheelCage({ scene: this });
+        const wheelCage = plinkoCreateWheelCage({scene: this});
         this.objects.wheel = wheelCage.wheel;
 
         plinkoCreateCageBalls({
@@ -84,10 +95,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        plinkoSetupDropButton({
-            scene: this,
-            objects: this.objects
-        })
+        gameEvents.on('dropBall', this.handleDropBall.bind(this));
 
         this.handleResize();
 
@@ -106,7 +114,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             cageCenterY: CAGE_CENTER_Y,
             cageRadius: CAGE_RADIUS
         });
-        
+
         this.objects.balls = this.objects.balls.filter(ball => {
             if (ball.getData('markedForDestroy') && ball.alpha <= 0) {
                 this.tweens.killTweensOf(ball);
@@ -119,6 +127,9 @@ export class PlinkoGameScene extends Phaser.Scene {
 
     destroy() {
         this.scale.off('resize', this.handleResize, this);
+
+        gameEvents.off('dropBall', this.handleDropBall);
+
         if (this.objects.backgroundVideo) {
             this.objects.backgroundVideo.stop();
             this.objects.backgroundVideo.destroy();
