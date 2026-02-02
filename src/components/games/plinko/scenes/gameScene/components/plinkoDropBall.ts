@@ -1,15 +1,23 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
 import {VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
 
+export const BALL_IMAGES = ['lemon', 'cherry', 'banana', 'melon', 'orange', 'grape', 'plum', 'star'] as const;
+export type BallImageType = typeof BALL_IMAGES[number];
+
+export function getRandomBallImage(): BallImageType {
+    return BALL_IMAGES[Math.floor(Math.random() * BALL_IMAGES.length)];
+}
+
 interface Props {
     objects: PlinkoGameObjectsType;
     this: Phaser.Scene & {
         matter: Phaser.Physics.Matter.MatterPhysics;
     };
     ballPath: number[];
+    ballImage: BallImageType;
 }
 
-export default function plinkoDropBall({ objects, this: scene, ballPath }: Props): Phaser.Physics.Matter.Image{
+export default function plinkoDropBall({ objects, this: scene, ballPath, ballImage }: Props): Phaser.Physics.Matter.Image{
     const centerX = VIRTUAL_WIDTH / 2;
     
     const ballSize = 32;
@@ -17,13 +25,15 @@ export default function plinkoDropBall({ objects, this: scene, ballPath }: Props
     const dropX = centerX;
     const dropY = 60;
 
-    const ball = scene.matter.add.image(dropX, dropY, 'lemon', undefined, {
+    const ball = scene.matter.add.image(dropX, dropY, ballImage, undefined, {
         shape: {type: 'circle', radius: ballRadius},
-        restitution: 0.7,
-        friction: 0.001,
-        frictionAir: 0.01,
-        density: 0.001,
-        chamfer: {radius: 0}
+                 restitution: 1.3,
+                friction: 0.001,
+                frictionAir: 0.002,
+                collisionFilter: {
+                    category: 0x0010,
+                    mask: 0x0008 | 0x0010
+                }
     });
 
     ball.setDisplaySize(ballSize, ballSize);
@@ -32,9 +42,9 @@ export default function plinkoDropBall({ objects, this: scene, ballPath }: Props
         type: 'circle',
         radius: ballRadius
     }, {
-        restitution: 0,
-        friction: 0.001,
-        frictionAir: 0.01,
+        restitution: 0,       // No bounce - we control direction manually
+        friction: 0,          // No friction for predictable movement
+        frictionAir: 0.015,   // Slight air resistance for natural feel
         density: 0.001,
         collisionFilter: {
             category: 0x0002,

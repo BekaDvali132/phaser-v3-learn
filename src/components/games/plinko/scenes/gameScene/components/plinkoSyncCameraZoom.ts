@@ -8,6 +8,7 @@ interface Props {
 }
 
 export function getDPR(scene: Phaser.Scene): number {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (scene.game as any).dpr || window.devicePixelRatio || 1;
 }
 

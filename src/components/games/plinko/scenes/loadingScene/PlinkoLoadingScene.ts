@@ -68,12 +68,21 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         // Load all game assets
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
         this.load.video('backgroundVideo', '/plinkoGameAssets/plinkoBackground.mp4');
-        this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
         this.load.image('wheel', '/plinkoGameAssets/plinkoWheel.webp');
         this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
             frameWidth: 128,  // Width of each multiplier frame
             frameHeight: 92 // Height of each multiplier frame
         });
+        
+        // Load fruit ball images
+        this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
+        this.load.image('cherry', '/plinkoGameAssets/plinkoCherry.png');
+        this.load.image('banana', '/plinkoGameAssets/plinkoBanana.png');
+        this.load.image('melon', '/plinkoGameAssets/plinkoMelon.png');
+        this.load.image('orange', '/plinkoGameAssets/plinkoOrange.png');
+        this.load.image('grape', '/plinkoGameAssets/plinkoGrape.png');
+        this.load.image('plum', '/plinkoGameAssets/plinkoPlum.png');
+        this.load.image('star', '/plinkoGameAssets/plinkoStar.png');
     }
 
     create() {
