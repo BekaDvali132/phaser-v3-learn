@@ -6,6 +6,8 @@ import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
+import { registerBallTest } from "../../../../../utils/plinkoGameTest.ts";
+import { cleanupGlowPool } from "./components/plinkoHandleBallPegCollission.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -54,15 +56,22 @@ export class PlinkoGameScene extends Phaser.Scene {
     preload() {
     }
 
-    handleDropBall() {
-        plinkoDropBall({
+    async handleDropBall() {
+        const pathSize = 14;
+        // const array = [0,1,0,0,0,1,1,0,0,0,0,0,0,1];    
+        const array = plinkoGenerateRandomBallPath(pathSize);    
+        const ball = plinkoDropBall({
             this: this,
             objects: this.objects,
-            ballPath: plinkoGenerateRandomBallPath(14),
+            ballPath: array,
             ballImage: getRandomBallImage()
         });
+        
+        const ballId = ball.getData('ID') as number;
+        // Register test and wait for ball arrival asynchronously
+        await registerBallTest(ballId, array, pathSize);
     }
-
+    
     create() {
         this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
@@ -100,20 +109,25 @@ export class PlinkoGameScene extends Phaser.Scene {
             this.objects.wheel.rotation += 0.02;
         }
 
-        this.objects.balls = this.objects.balls.filter(ball => {
+        // Optimized ball cleanup - iterate backwards and splice in-place
+        const balls = this.objects.balls;
+        for (let i = balls.length - 1; i >= 0; i--) {
+            const ball = balls[i];
             if (ball.getData('markedForDestroy') && ball.alpha <= 0) {
                 this.tweens.killTweensOf(ball);
                 ball.destroy();
-                return false;
+                balls.splice(i, 1);
             }
-            return true;
-        });
+        }
     }
 
     destroy() {
         this.scale.off('resize', this.handleResize, this);
 
         gameEvents.off('dropBall', this.handleDropBall);
+
+        // Clean up glow object pool
+        cleanupGlowPool();
 
         if (this.objects.backgroundVideo) {
             this.objects.backgroundVideo.stop();

@@ -1,36 +1,78 @@
+// Cache for reusable glow graphics to avoid creating new objects on every collision
+let glowPool: Phaser.GameObjects.Graphics[] = [];
+const GLOW_POOL_SIZE = 20;
+
+function getGlowFromPool(scene: Phaser.Scene): Phaser.GameObjects.Graphics {
+    // Try to get an inactive glow from the pool
+    for (let i = 0; i < glowPool.length; i++) {
+        const glow = glowPool[i];
+        if (!glow.active) {
+            glow.setActive(true);
+            glow.setVisible(true);
+            glow.setAlpha(1);
+            return glow;
+        }
+    }
+        if (glowPool.length < GLOW_POOL_SIZE) {
+        const glow = scene.add.graphics();
+        glow.setBlendMode(Phaser.BlendModes.ADD);
+        
+        const glowColor = 0xa233ea;
+        const steps = 12; // Reduced from 12 for better performance
+        const maxRadius = 25;
+        for (let i = steps; i >= 0; i--) {
+            const t = i / steps;
+            const alpha = 0.04 * (1 - t * t);
+            const radius = maxRadius * (0.4 + 0.6 * t);
+            glow.fillStyle(glowColor, alpha);
+            glow.fillCircle(0, 0, radius);
+        }
+        
+        glowPool.push(glow);
+        return glow;
+    }
+    return glowPool[0];
+}
+
+function returnGlowToPool(glow: Phaser.GameObjects.Graphics): void {
+    glow.setActive(false);
+    glow.setVisible(false);
+}
+
+// Export cleanup function for scene destruction
+export function cleanupGlowPool(): void {
+    for (const glow of glowPool) {
+        glow.destroy();
+    }
+    glowPool = [];
+}
+
 export default function plinkoHandleBallPegCollission(
     ball: Phaser.Physics.Matter.Image, 
     peg: Phaser.Physics.Matter.Image,
     scene: Phaser.Scene
 ) {
     const pegId = (peg.body as MatterJS.BodyType).id;
-    const hitPegs = ball.getData('hitPegs') || new Set();
+    let hitPegs = ball.getData('hitPegs') as Set<number> | undefined;
+
+    if (!hitPegs) {
+        hitPegs = new Set();
+        ball.setData('hitPegs', hitPegs);
+    }
 
     if (hitPegs.has(pegId)) {
         return;
     }
 
     hitPegs.add(pegId);
-    ball.setData('hitPegs', hitPegs);
 
     const purple = 0xD8B4FE;
     peg.setTint(purple);
     
-    const glow = scene.add.graphics();
+    // Use pooled glow object instead of creating new one
+    const glow = getGlowFromPool(scene);
     glow.setPosition(peg.x, peg.y);
     glow.setDepth(peg.depth - 1);
-    glow.setBlendMode(Phaser.BlendModes.ADD);
-    
-    const glowColor = 0xa233ea 
-    const steps = 12;
-    const maxRadius = 25;
-    for (let i = steps; i >= 0; i--) {
-        const t = i / steps;
-        const alpha = 0.03 * (1 - t * t);
-        const radius = maxRadius * (0.4 + 0.6 * t);
-        glow.fillStyle(glowColor, alpha);
-        glow.fillCircle(0, 0, radius);
-    }
     
     scene.tweens.add({
         targets: glow,
@@ -38,7 +80,7 @@ export default function plinkoHandleBallPegCollission(
         duration: 350,
         ease: 'Sine.easeOut',
         onComplete: () => {
-            glow.destroy();
+            returnGlowToPool(glow);
             peg.clearTint();
         }
     });
@@ -63,5 +105,4 @@ export default function plinkoHandleBallPegCollission(
         }
     });
 
-    console.log(`Peg Row ${pegRowIndex}: Going ${direction === -1 ? 'LEFT' : 'RIGHT'}`);
 }

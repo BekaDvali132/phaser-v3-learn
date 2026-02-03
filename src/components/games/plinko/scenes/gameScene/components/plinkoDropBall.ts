@@ -16,7 +16,6 @@ interface Props {
     ballPath: number[];
     ballImage: BallImageType;
 }
-
 export default function plinkoDropBall({ objects, this: scene, ballPath, ballImage }: Props): Phaser.Physics.Matter.Image{
     const centerX = VIRTUAL_WIDTH / 2;
     
@@ -54,7 +53,7 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
 
     ball.setData('path', ballPath);
     ball.setData('currentRow', 0);
-
+    ball.setData('ID', crypto.randomUUID()); // Use incrementing counter instead of Date.now()
     ball.setVelocity(0, 0);
 
     objects.balls.push(ball);

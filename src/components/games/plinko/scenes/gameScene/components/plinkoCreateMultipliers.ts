@@ -33,6 +33,7 @@ export function plinkoCreateMultipliers ({ this: scene, objects }: Props): void{
         sensor.gameObject = multiplier;
         multiplier.setData('sensor', sensor);
         multiplier.setData('value', multiplierValues[i]);
+        multiplier.setData('sideIndex', i - 7);
 
         objects.multipliers.push(multiplier);
     }

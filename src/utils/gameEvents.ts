@@ -33,3 +33,20 @@ class GameEventEmitter {
 }
 
 export const gameEvents = new GameEventEmitter();
+
+(window as unknown as { gameEvents: GameEventEmitter }).gameEvents = gameEvents;
+
+// dropBalls(1000, 1)
+(window as unknown as { dropBalls: (count: number, delayMs?: number) => number }).dropBalls = (count: number, delayMs: number = 100) => {
+    let dropped = 0;
+    const interval = setInterval(() => {
+        if (dropped >= count) {
+            clearInterval(interval);
+            console.log(`Finished dropping ${count} balls`);
+            return;
+        }
+        gameEvents.emit('dropBall');
+        dropped++;
+    }, delayMs);
+    return interval;
+};
