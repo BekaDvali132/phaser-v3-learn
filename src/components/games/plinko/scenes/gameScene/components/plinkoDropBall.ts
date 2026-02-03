@@ -27,7 +27,7 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
     const ball = scene.matter.add.image(dropX, dropY, ballImage, undefined, {
         shape: {type: 'circle', radius: ballRadius},
                  restitution: 1.3,
-                friction: 0.001,
+                friction: 0,
                 frictionAir: 0.002,
                 collisionFilter: {
                     category: 0x0010,
