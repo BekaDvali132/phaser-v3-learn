@@ -18,7 +18,7 @@ function getGlowFromPool(scene: Phaser.Scene): Phaser.GameObjects.Graphics {
         glow.setBlendMode(Phaser.BlendModes.ADD);
         
         const glowColor = 0xa233ea;
-        const steps = 12; // Reduced from 12 for better performance
+        const steps = 12;
         const maxRadius = 25;
         for (let i = steps; i >= 0; i--) {
             const t = i / steps;
