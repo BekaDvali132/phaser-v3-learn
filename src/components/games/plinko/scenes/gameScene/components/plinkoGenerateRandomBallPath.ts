@@ -4,11 +4,11 @@ export default function plinkoGenerateRandomBallPath(size: number): number[] {
 }
 export function plinkoGenerateRandomBallPathFixed(rows: number): number[] {
     const slots = rows + 1
+    // იწყება 0 იდან რომელიც არის მარცხენა უკიდურესი მხარე და ადის row მდე
     const destination = Math.floor(Math.random() * slots)
 
     const rights = destination
     const lefts = rows - destination
-    console.log(destination)
     const path = [
         ...Array(rights).fill(1),
         ...Array(lefts).fill(0)
