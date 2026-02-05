@@ -14,6 +14,7 @@ function plinkoGame({ parent }: Props) {
 
     // Create canvas with proper DPR scaling
     const canvas = document.createElement('canvas');
+    canvas.id = 'game'
     canvas.width = Math.floor(displayWidth * dpr);
     canvas.height = Math.floor(displayHeight * dpr);
     canvas.style.width = displayWidth + 'px';

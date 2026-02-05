@@ -42,10 +42,11 @@ function PlinkoControls() {
                 setShow(false)
             })
         }
-    },[])
+    }, [])
 
     return (
-        <div className={`flex w-full my-container absolute bottom-[76px] gap-2 select-none duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div
+            className={`flex w-full my-container absolute bottom-[76px] gap-2 select-none duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <PlinkoControl handleDecrease={handleRowDecrease} handleIncrease={handleRowsIncrease}
                            increaseDisabled={rows >= 14} decreaseDisabled={rows <= 1}>
                 <div className="flex flex-col gap-2">
@@ -86,9 +87,13 @@ function PlinkoControls() {
                     gameEvents.emit('dropBall');
                 }}
                 type={'button'}
-                className={'h-[66px] px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
+                className={'h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
             >
-                play
+                <img src="/plinkoGameAssets/plinkoPlayButtonBg.webp" alt="Plinko Play Button"
+                     className={'w-full h-full absolute left-0 top-0'}/>
+                <span className={'relative z-10'}>
+                    play
+                </span>
             </button>
         </div>
     );
