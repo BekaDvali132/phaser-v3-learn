@@ -9,7 +9,6 @@ const multiplierValues = [18, 3.2, 1.6, 1.3, 1.2, 1.1, 1, 0.5, 1, 1.1, 1.2, 1.3,
 
 export function plinkoCreateMultipliers ({ this: scene, objects }: Props): void{
     const centerX = VIRTUAL_WIDTH / 2;
-    
     const multiplierWidth = 49;
     const multiplierHeight = 36;
     const numberOfMultipliers = 15;

@@ -41,36 +41,20 @@ export default function plinkoHandleBallPegCollission(
 
     const path = ball.getData('path') as number[];
     const pegRowIndex = peg.getData('rowIndex') as number;
-
     const currentRow = (ball.getData('currentRow') as number | undefined) ?? 0;
     if (pegRowIndex !== currentRow) {
         return;
     }
-
-    if (pegRowIndex >= path.length || pegRowIndex < 0) {
-        return;
-    }
-
     const direction = path[pegRowIndex] === 0 ? -1 : 1;
-    
+
     const horizontalSpeed = 2.5;
     const minDownwardSpeed = 2.5;
-
-    const collisionNonce = ((ball.getData('collisionNonce') as number | undefined) ?? 0) + 1;
-    ball.setData('collisionNonce', collisionNonce);
     ball.setData('currentRow', currentRow + 1);
 
     scene.time.delayedCall(1, () => {
         if (!ball.body) {
             return;
         }
-
-        const activeNonce = ball.getData('collisionNonce') as number | undefined;
-        const lastProcessedRow = ((ball.getData('currentRow') as number | undefined) ?? 0) - 1;
-        if (activeNonce !== collisionNonce || lastProcessedRow !== pegRowIndex) {
-            return;
-        }
-
         const body = ball.body as MatterJS.BodyType;
         const newVelocityY = Math.max(body.velocity.y, minDownwardSpeed);
         ball.setVelocity(direction * horizontalSpeed, newVelocityY);
