@@ -23,9 +23,8 @@ export default function plinkoHandleBallMultiplierHit({
     ball.setData('markedForDestroy', true);
 
     // Get ball ID and multiplier sideIndex for test verification
-    const ballId = ball.getData('ID') as string;
+    const ballId = ball.getData('Ball_id') as string;
     const sideIndex = multiplier.getData('sideIndex') as number;
-    
     // Emit event for test verification
     gameEvents.emit('ballArrivedAtMultiplier', ballId, sideIndex);
 
@@ -39,9 +38,9 @@ export default function plinkoHandleBallMultiplierHit({
     if (multiplier.getData('isAnimating')) {
         return;
     }
-    
 
-    const baseY = multiplier.getData('baseY') || multiplier.y;
+
+    const baseY = multiplier.y;
     const bounceDistance = 10;
 
     // Mark as animating

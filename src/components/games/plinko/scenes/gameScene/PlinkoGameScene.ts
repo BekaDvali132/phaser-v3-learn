@@ -5,8 +5,10 @@ import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackgroun
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
-import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
 import plinkoCreateBallsBoard from "./components/plinkoCreateBallsBoard.ts";
+import { registerBallTest } from "../../../../../utils/plinkoGameTest.ts";
+import { plinkoGenerateRandomBallPathFixed } from "./components/plinkoGenerateRandomBallPath.ts";
+import { cleanupGlowPool } from "./components/plinkoCreatePegGlow.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -81,8 +83,6 @@ export class PlinkoGameScene extends Phaser.Scene {
 
     async handleDropBall() {
         const pathSize = 14;
-        // const array = [0,1,0,0,0,1,1,0,0,0,0,0,0,1];    
-        // const array = plinkoGenerateRandomBallPath(pathSize);    
         const array = plinkoGenerateRandomBallPathFixed(pathSize);
         const ball = plinkoDropBall({
             this: this,
@@ -91,7 +91,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             ballImage: getRandomBallImage()
         });
         
-        const ballId = ball.getData('ID') as number;
+        const ballId = ball.getData('Ball_id') as number;
         // Register test and wait for ball arrival asynchronously
         await registerBallTest(ballId, array, pathSize);
     }
@@ -162,7 +162,6 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         gameEvents.off('dropBall', this.handleDropBall);
 
-        // Clean up glow object pool
         cleanupGlowPool();
 
         if (this.objects.backgroundVideo) {

@@ -53,7 +53,7 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
 
     ball.setData('path', ballPath);
     ball.setData('currentRow', 0);
-    ball.setData('ID', crypto.randomUUID()); // Use incrementing counter instead of Date.now()
+    ball.setData('Ball_id', crypto.randomUUID()); // Use incrementing counter instead of Date.now()
     ball.setVelocity(0, 0);
 
     objects.balls.push(ball);
