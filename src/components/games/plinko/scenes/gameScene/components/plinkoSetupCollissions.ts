@@ -9,68 +9,40 @@ interface Props {
     objects: PlinkoGameObjectsType
 }
 
-// Use gameObject reference directly from Matter body for O(1) lookup
-function getGameObjectFromBody(body: MatterJS.BodyType): Phaser.GameObjects.GameObject | null {
-    const bodyWithGameObject = body as MatterJS.BodyType & { gameObject?: Phaser.GameObjects.GameObject };
-    return bodyWithGameObject.gameObject || null;
+function getBallFromBody(body: MatterJS.BodyType, objects: PlinkoGameObjectsType): Phaser.Physics.Matter.Image | null {
+    return objects.balls.find(b => b.body === body) || null;
 }
 
-function isBall(gameObject: Phaser.GameObjects.GameObject | null): gameObject is Phaser.Physics.Matter.Image {
-    if (!gameObject) return false;
-    return gameObject.getData('ID') !== undefined;
+function getPegFromBody(body: MatterJS.BodyType, objects: PlinkoGameObjectsType): Phaser.Physics.Matter.Image | null {
+    return objects.pegs.find(p => p.body === body) || null;
 }
 
-function isPeg(gameObject: Phaser.GameObjects.GameObject | null): gameObject is Phaser.Physics.Matter.Image {
-    if (!gameObject) return false;
-    return gameObject.getData('rowIndex') !== undefined && gameObject.getData('colIndex') !== undefined;
-}
-
-function isMultiplier(body: MatterJS.BodyType): Phaser.GameObjects.Image | null {
+function getMultiplierFromBody(body: MatterJS.BodyType, objects: PlinkoGameObjectsType): Phaser.GameObjects.Image | null {
     const bodyWithLabel = body as MatterJS.BodyType & { label?: string; gameObject?: Phaser.GameObjects.Image };
     if (bodyWithLabel.label === 'multiplier' && bodyWithLabel.gameObject) {
         return bodyWithLabel.gameObject;
     }
-    return null;
+
+    const multiplier = objects.multipliers.find(m => {
+        const sensor = m.getData('sensor');
+        return sensor && sensor === body;
+    });
+
+    return multiplier || null;
 }
 
 export default function plinkoSetupCollissions({this: scene, objects}: Props): void {
     scene.matter.world.on('collisionstart', (event: { pairs: { bodyA: MatterJS.BodyType; bodyB: MatterJS.BodyType }[] }) => {
-        const pairs = event.pairs;
-        const len = pairs.length;
-        
-        for (let i = 0; i < len; i++) {
-            const pair = pairs[i];
-            const bodyA = pair.bodyA;
-            const bodyB = pair.bodyB;
+        event.pairs.forEach((pair: { bodyA: MatterJS.BodyType; bodyB: MatterJS.BodyType }) => {
+            const {bodyA, bodyB} = pair;
 
-            // Get game objects directly from bodies - O(1) lookup
-            const gameObjectA = getGameObjectFromBody(bodyA);
-            const gameObjectB = getGameObjectFromBody(bodyB);
-
-            // Determine ball and other object
-            let ball: Phaser.Physics.Matter.Image | null = null;
-            let peg: Phaser.Physics.Matter.Image | null = null;
-            let multiplier: Phaser.GameObjects.Image | null = null;
-
-            if (isBall(gameObjectA)) {
-                ball = gameObjectA;
-                if (isPeg(gameObjectB)) {
-                    peg = gameObjectB;
-                } else {
-                    multiplier = isMultiplier(bodyB);
-                }
-            } else if (isBall(gameObjectB)) {
-                ball = gameObjectB;
-                if (isPeg(gameObjectA)) {
-                    peg = gameObjectA;
-                } else {
-                    multiplier = isMultiplier(bodyA);
-                }
-            }
+            const ball = getBallFromBody(bodyA, objects) || getBallFromBody(bodyB, objects);
+            const peg = getPegFromBody(bodyA, objects) || getPegFromBody(bodyB, objects);
+            const multiplier = getMultiplierFromBody(bodyA, objects) || getMultiplierFromBody(bodyB, objects);
 
             if (ball && peg) {
                 plinkoHandleBallPegCollission(ball, peg, scene);
-                continue;
+                return;
             }
 
             if (ball && multiplier) {
@@ -79,8 +51,8 @@ export default function plinkoSetupCollissions({this: scene, objects}: Props): v
                     multiplier,
                     scene,
                     objects
-                });
+                })
             }
-        }
+        });
     });
 }
