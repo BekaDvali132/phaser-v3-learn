@@ -5,10 +5,12 @@ import ExpanderContainer from "../../containers/expanderContainer/ExpanderContai
 const paragraphClass = 'text-white text-[14px]'
 
 interface Props {
-    data: PlinkoHistoryItemType
+    data: PlinkoHistoryItemType;
+    handleRemove: () => void;
+    toBeRemoved: boolean;
 }
 
-function PlinkoHistoryItem({data: {payout, time, totalBet, profit}}: Props) {
+function PlinkoHistoryItem({data: {payout, time, totalBet, profit}, handleRemove, toBeRemoved}: Props) {
     const [expanded, setExpanded] = useState<boolean>(false)
     const ref = useRef<HTMLDivElement>(null);
 
@@ -17,11 +19,27 @@ function PlinkoHistoryItem({data: {payout, time, totalBet, profit}}: Props) {
             ref.current.classList.replace('opacity-0', 'opacity-100');
             setExpanded(true);
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (toBeRemoved) {
+            if (ref?.current) {
+                const y = ref.current.offsetTop;
+                ref.current.classList.add('absolute');
+                ref.current.style.top = `${y}px`;
+                ref.current.classList.replace('opacity-100', 'opacity-0');
+                ref.current.classList.add('translate-x-[-100%]');
+                setTimeout(() => {
+                    handleRemove();
+                }, 500)
+            }
+        }
+    }, [toBeRemoved]);
+
     return (
         <ExpanderContainer expanded={expanded}>
             <div ref={ref}
-                 className={'border pl-[7px] pr-[4px] flex gap-3 border-solid border-[#ffffff1a] bg-[#0f002ab2] min-h-[43px] max-h-[43px] items-center rounded-2xl opacity-0 duration-300'}>
+                 className={'border pl-[7px] pr-[4px] flex gap-3 border-solid border-[#ffffff1a] bg-[#0f002ab2] min-h-[43px] max-h-[43px] items-center rounded-2xl opacity-0 duration-700'}>
                 <p className={`${paragraphClass} w-[60px]`}>
                     {time}
                 </p>

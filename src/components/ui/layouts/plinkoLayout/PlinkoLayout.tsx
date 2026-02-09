@@ -32,7 +32,7 @@ function PlinkoLayout({children}: Props) {
             <main className={'h-full w-full absolute left-0 top-0'}>
                 {children}
             </main>
-            <div className={`w-full absolute flex justify-between top-[170px] px-[60px] duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div className={`w-full my-container absolute flex justify-between top-[170px] px-[60px] duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <PlinkoHistory />
                 <PlinkoBallsBoard />
             </div>

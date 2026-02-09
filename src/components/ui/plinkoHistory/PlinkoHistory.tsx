@@ -27,6 +27,17 @@ function PlinkoHistory() {
         }
     }, [])
 
+    const handleRemove = (id: PlinkoHistoryItemType['id']) => {
+        setHistory(
+            (prev) => {
+                const newObj = {...prev};
+                if (newObj?.[id]) {
+                    delete newObj[id];
+                }
+                return newObj;
+            }
+        )
+    }
 
     return (
         <div className={'flex flex-col gap-3'}>
@@ -41,9 +52,11 @@ function PlinkoHistory() {
                 <div className={'flex flex-col gap-1'}>
                     {Object.values(history)?.sort(
                         (a, b) => b.createdAt - a.createdAt
-                    )?.map(item => <PlinkoHistoryItem
+                    )?.map((item, index) => <PlinkoHistoryItem
                         key={item.id}
                         data={item}
+                        handleRemove={() => handleRemove(item.id)}
+                        toBeRemoved={index >= 6}
                     />)}
                 </div>
             </div>
