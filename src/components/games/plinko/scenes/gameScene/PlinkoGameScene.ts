@@ -6,7 +6,6 @@ import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
-import plinkoCreateBallsBoard from "./components/plinkoCreateBallsBoard.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -60,18 +59,18 @@ export class PlinkoGameScene extends Phaser.Scene {
             if (canvas.clientWidth < 1024 && this.device === 'desktop') {
                 this.device = 'mobile';
                 console.log('chage')
-                plinkoCreateBallsBoard({
-                    scene: this,
-                    objects: this.objects,
-                    device: this.device
-                })
+                // plinkoCreateBallsBoard({
+                //     scene: this,
+                //     objects: this.objects,
+                //     device: this.device
+                // })
             } else if (canvas.clientWidth > 1023 && this.device === 'mobile') {
                 this.device = 'desktop';
-                plinkoCreateBallsBoard({
-                    scene: this,
-                    objects: this.objects,
-                    device: this.device
-                })
+                // plinkoCreateBallsBoard({
+                //     scene: this,
+                //     objects: this.objects,
+                //     device: this.device
+                // })
             }
         }
     }
@@ -123,11 +122,11 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         this.scale.on('resize', this.handleResize, this);
 
-        plinkoCreateBallsBoard({
-            scene: this,
-            objects: this.objects,
-            device: this.device
-        })
+        // plinkoCreateBallsBoard({
+        //     scene: this,
+        //     objects: this.objects,
+        //     device: this.device
+        // })
 
         gameEvents.emit('gameLoaded');
     }

@@ -44,9 +44,9 @@ function PlinkoBallsBoard() {
     ]
     return (
         <div
-            className={'mt-[17px] bg-[#0f002ab2] p-3 border border-solid border-[#ffffff1a] rounded-3xl w-[118px] grid grid-cols-2 gap-1'}>
+            className={`mt-[17px] bg-[#0f002ab2] p-3 border border-solid border-[#ffffff1a] rounded-3xl w-[118px] h-full max-h-[248px] grid grid-cols-2 gap-1 `}>
             {plinkoBallsList.map(
-                item => <div className={'flex flex-col gap-[2px] items-center'} key={item.multiplier}>
+                item => <div className={'flex flex-col gap-[2px] items-center h-[53px]'} key={item.img}>
                     <img
                         src={item.img}
                         alt={item.alt}

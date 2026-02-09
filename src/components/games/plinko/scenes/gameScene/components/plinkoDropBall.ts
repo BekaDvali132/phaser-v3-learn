@@ -1,5 +1,6 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
 import {VIRTUAL_WIDTH} from "../PlinkoGameScene.ts";
+import { v4 as uuidv4 } from 'uuid';
 
 export const BALL_IMAGES = ['lemon', 'cherry', 'banana', 'melon', 'orange', 'grape', 'plum', 'star'] as const;
 export type BallImageType = typeof BALL_IMAGES[number];
@@ -52,6 +53,7 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
         }
     });
 
+    ball.setData('id', uuidv4());
     ball.setData('path', ballPath);
     ball.setData('currentRow', 0);
 
