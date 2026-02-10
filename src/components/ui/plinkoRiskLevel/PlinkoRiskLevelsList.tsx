@@ -35,14 +35,15 @@ function PlinkoRiskLevelsList() {
     };
 
     return (
-        <div className={'flex flex-col gap-2 items-end h-fit'}>
+        <div className={'flex flex-col gap-2 items-end h-fit w-[136px]'}>
             <p className={'uppercase text-[12px] text-white font-semibold leading-[15px] text-right'}>risk level</p>
             {plinkoRiskLevels?.map(
                 level => <PlinkoRiskLevel
                     key={level.key}
                     Icon={level.Icon}
                     title={level.title}
-                    className={`w-[${level.width}px]`}
+                    className={'w-full'}
+                    maxWidth={level.width}
                     isActive={activeLevel === level.key}
                     linearBackground={'linear-gradient(180deg, rgba(34, 13, 74, 0.5) 0%, rgba(98, 64, 162, 0.5) 100%)'}
                     handleToggle={() => handleToggle(level.key)}
