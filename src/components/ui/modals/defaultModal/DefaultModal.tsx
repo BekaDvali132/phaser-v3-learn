@@ -1,11 +1,11 @@
-import {useEffect, useState} from 'react';
+import {type Dispatch, type ReactNode, type SetStateAction, useEffect, useState} from 'react';
 import {CloseIcon} from "../../../../assets/SvgToTsx.tsx";
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+    show: boolean;
+    setShow: Dispatch<SetStateAction<boolean>>
     title?: string;
-    children: React.ReactNode;
+    children: ReactNode;
     showCloseButton?: boolean;
     closeOnOverlayClick?: boolean;
     closeOnEscape?: boolean;
@@ -13,8 +13,8 @@ interface ModalProps {
 }
 
 function DefaultModal({
-                          isOpen,
-                          onClose,
+                          show,
+                          setShow,
                           title,
                           children,
                           showCloseButton = true,
@@ -27,7 +27,7 @@ function DefaultModal({
 
     // Handle open/close animations
     useEffect(() => {
-        if (isOpen) {
+        if (show) {
             setShouldRender(true);
             // Small delay to trigger animation
             setTimeout(() => setIsAnimating(true), 10);
@@ -37,23 +37,23 @@ function DefaultModal({
             const timer = setTimeout(() => setShouldRender(false), 200);
             return () => clearTimeout(timer);
         }
-    }, [isOpen]);
+    }, [show]);
 
     // Handle escape key
     useEffect(() => {
-        if (!closeOnEscape || !isOpen) return;
+        if (!closeOnEscape || !show) return;
 
         const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
+            if (e.key === 'Escape') setShow(false);
         };
 
         document.addEventListener('keydown', handleEscape);
         return () => document.removeEventListener('keydown', handleEscape);
-    }, [isOpen, onClose, closeOnEscape]);
+    }, [show, setShow, closeOnEscape]);
 
     // Prevent body scroll when modal is open
     useEffect(() => {
-        if (isOpen) {
+        if (show) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -62,13 +62,13 @@ function DefaultModal({
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [show]);
 
     if (!shouldRender) return null;
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (closeOnOverlayClick && e.target === e.currentTarget) {
-            onClose();
+            setShow(false);
         }
     };
 
@@ -88,7 +88,6 @@ function DefaultModal({
                     width: '100%'
                 }}
             >
-                {/* Header */}
                 {(title || showCloseButton) && (
                     <div className="flex items-center justify-between gap-9">
                         {title && (
@@ -96,7 +95,7 @@ function DefaultModal({
                         )}
                         {showCloseButton && (
                             <button
-                                onClick={onClose}
+                                onClick={() => setShow(false)}
                                 className="w-9 h-9 rounded-[14px] cursor-pointer flex items-center justify-center border border-solid border-white/10 bg-[#0f002ab2]"
                                 aria-label="Close modal"
                             >
