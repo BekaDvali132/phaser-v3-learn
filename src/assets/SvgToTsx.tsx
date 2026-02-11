@@ -9,3 +9,4 @@ export { default as ReflectivePlusIcon } from "./reflectivePlus.svg?react";
 export { default as FireIcon } from "./fire.svg?react";
 export { default as ArrowIcon } from "./arrow.svg?react";
 export { default as CoffeeIcon } from "./coffee.svg?react";
+export { default as CloseIcon } from "./close.svg?react";
