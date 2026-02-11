@@ -11,3 +11,8 @@ export { default as ArrowIcon } from "./arrow.svg?react";
 export { default as CoffeeIcon } from "./coffee.svg?react";
 export { default as CloseIcon } from "./close.svg?react";
 export { default as InfinityIcon } from "./infinity.svg?react";
+export { default as QuestionIcon } from "./question.svg?react";
+export { default as DocumentIcon } from "./document.svg?react";
+export { default as CoinsIcon } from "./coins.svg?react";
+export { default as SoundIcon } from "./sound.svg?react";
+export { default as MusicIcon } from "./music.svg?react";
