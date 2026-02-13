@@ -46,7 +46,7 @@ function HistoryModal({show, setShow}: Props) {
                 <div className="grid grid-cols-4 items-center gap-3 px-2"
                 >
                     <p className={`${paragraphClass}`}>Time</p>
-                    <p className={`${paragraphClass} text-center`}>Total Bet</p>
+                    <p className={`${paragraphClass}`}>Total Bet</p>
                     <p className={`${paragraphClass}`}>payout</p>
                     <p className={`${paragraphClass} text-center`}>profit</p>
                 </div>

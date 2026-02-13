@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./utils/fonts.css";
 @import "./utils/ExpanderContainer.css";
+@import "./utils/Svg.css";
 
 .my-container {
   width: 100%;
