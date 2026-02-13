@@ -16,3 +16,4 @@ export { default as DocumentIcon } from "./document.svg?react";
 export { default as CoinsIcon } from "./coins.svg?react";
 export { default as SoundIcon } from "./sound.svg?react";
 export { default as MusicIcon } from "./music.svg?react";
+export { default as HistoryIcon } from "./history.svg?react";
