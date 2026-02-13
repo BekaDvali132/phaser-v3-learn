@@ -40,13 +40,13 @@ function PlinkoHistory() {
     }
 
     return (
-        <div className={'flex flex-col gap-3'}>
-            <div className="flex items-center gap-3 px-2"
+        <div className={'flex flex-col gap-3 w-[342px]'}>
+            <div className="grid grid-cols-4 items-center gap-3 px-2"
             >
-                <p className={`${paragraphClass} w-[60px]`}>Time</p>
-                <p className={`${paragraphClass} w-[72px] text-center`}>Total Bet</p>
-                <p className={`${paragraphClass} w-[62px]`}>payout</p>
-                <p className={`${paragraphClass} w-[68px] text-center`}>profit</p>
+                <p className={`${paragraphClass}`}>Time</p>
+                <p className={`${paragraphClass}`}>Total Bet</p>
+                <p className={`${paragraphClass}`}>payout</p>
+                <p className={`${paragraphClass} text-center`}>profit</p>
             </div>
             <div className="h-[325px] overflow-y-auto">
                 <div className={'flex flex-col gap-1'}>

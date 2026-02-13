@@ -39,17 +39,17 @@ function PlinkoHistoryItem({data: {payout, time, totalBet, profit}, handleRemove
     return (
         <ExpanderContainer expanded={expanded}>
             <div ref={ref}
-                 className={'border pl-[7px] pr-[4px] flex gap-3 border-solid border-[#ffffff1a] bg-[#0f002ab2] min-h-[43px] max-h-[43px] items-center rounded-2xl opacity-0 duration-700'}>
-                <p className={`${paragraphClass} w-[60px]`}>
+                 className={'border pl-[7px] pr-[4px] grid-cols-4 grid gap-3 border-solid border-[#ffffff1a] bg-[#0f002ab2] min-h-[43px] max-h-[43px] items-center rounded-2xl opacity-0 duration-700'}>
+                <p className={`${paragraphClass}`}>
                     {time}
                 </p>
-                <p className={`${paragraphClass} w-[72px]`}>
+                <p className={`${paragraphClass}`}>
                     {totalBet.toPrecision(3)} USD
                 </p>
-                <p className={`${paragraphClass} w-[65px]`}>
+                <p className={`${paragraphClass}`}>
                     {payout} x
                 </p>
-                <button type={'button'} className={`relative h-[33px] w-[68px] flex items-center justify-center`}>
+                <button type={'button'} className={`relative h-[33px] flex items-center justify-center`}>
                     <img
                         src={profit > 0 ? '/plinkoGameAssets/plinkoWinButtonBg.png' : "/plinkoGameAssets/plinkoLossButtonBg.png"}
                         alt="Button Background" height={33} width={68} className={'absolute w-full h-full'}/>

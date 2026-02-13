@@ -17,9 +17,7 @@ function PlinkoHeaderControls() {
     };
 
     const handleSetting = () => {
-        if (!showSettings) {
-            setShowSettings(true)
-        }
+        setShowSettings(true)
     }
 
     return (
@@ -37,13 +35,13 @@ function PlinkoHeaderControls() {
                 <button
                     type={'button'}
                     onClick={handleSetting}
-                    className={'flex items-center justify-center h-11 w-11 relative cursor-pointer'}
+                    className={`flex items-center justify-center h-11 w-11 relative cursor-pointer ${showSettings && 'pointer-events-none'}`}
                 >
                     <img src="/plinkoGameAssets/plinkoDefaultButtonBg.webp" alt="Button"
                          className={'absolute w-full h-full'}/>
                     <SettingsIcon className={'w-5 h-5 z-10'}/>
                 </button>
-                <PlinkoSettings show={showSettings} setShow={setShowSettings} />
+                <PlinkoSettings show={showSettings} setShow={setShowSettings}/>
             </div>
         </div>
     );
