@@ -19,3 +19,4 @@ export { default as MusicIcon } from "./music.svg?react";
 export { default as HistoryIcon } from "./history.svg?react";
 export { default as WifiIcon } from "./wifi.svg?react";
 export { default as ErrorIcon } from "./error.svg?react";
+export { default as CelebrateIcon } from "./celebrate.svg?react";

@@ -9,9 +9,10 @@ const paragraphClass = 'text-white font-semibold text-[14px] uppercase';
 interface Props {
     className: string
 }
+
 function PlinkoHistory({
                            className
-                       }:Props) {
+                       }: Props) {
     const [lastWin, setLastWin] = useState<PlinkoHistoryItemType | undefined>(undefined)
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
@@ -49,24 +50,26 @@ function PlinkoHistory({
     }
 
     return (
-        <div className={`flex flex-col gap-3 w-[342px] ${className}`}>
-            <div className="grid grid-cols-4 items-center gap-3 px-2"
-            >
-                <p className={`${paragraphClass}`}>Time</p>
-                <p className={`${paragraphClass}`}>Total Bet</p>
-                <p className={`${paragraphClass}`}>payout</p>
-                <p className={`${paragraphClass} text-center`}>profit</p>
-            </div>
-            <div className="h-[325px] overflow-y-auto">
-                <div className={'flex flex-col gap-1'}>
-                    {Object.values(history)?.sort(
-                        (a, b) => b.createdAt - a.createdAt
-                    )?.map((item, index) => <PlinkoHistoryItem
-                        key={item.id}
-                        data={item}
-                        handleRemove={() => handleRemove(item.id)}
-                        toBeRemoved={index >= 6}
-                    />)}
+        <>
+            <div className={`flex flex-col gap-3 w-[342px] ${className}`}>
+                <div className="grid grid-cols-4 items-center gap-3 px-2"
+                >
+                    <p className={`${paragraphClass}`}>Time</p>
+                    <p className={`${paragraphClass}`}>Total Bet</p>
+                    <p className={`${paragraphClass}`}>payout</p>
+                    <p className={`${paragraphClass} text-center`}>profit</p>
+                </div>
+                <div className="h-[325px] overflow-y-auto">
+                    <div className={'flex flex-col gap-1'}>
+                        {Object.values(history)?.sort(
+                            (a, b) => b.createdAt - a.createdAt
+                        )?.map((item, index) => <PlinkoHistoryItem
+                            key={item.id}
+                            data={item}
+                            handleRemove={() => handleRemove(item.id)}
+                            toBeRemoved={index >= 6}
+                        />)}
+                    </div>
                 </div>
             </div>
             <WinMessage
@@ -74,7 +77,7 @@ function PlinkoHistory({
                 win={lastWin}
                 setWin={setLastWin}
             />
-        </div>
+        </>
     );
 }
 

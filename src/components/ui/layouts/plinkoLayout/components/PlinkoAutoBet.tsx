@@ -9,7 +9,7 @@ function PlinkoAutoBet() {
             <button
                 type={'button'}
                 onClick={() => setIsOpen(true)}
-                className={'h-[66px] px-[21px] rounded-2xl bg-[#ff9608] text-[#0f002a] font-semibold uppercase text-[16px] cursor-pointer'}
+                className={'h-13 md:h-[66px] px-[21px] rounded-2xl bg-[#ff9608] text-[#0f002a] font-semibold uppercase text-[14px] md:text-[16px] cursor-pointer'}
             >
                 autobet
             </button>

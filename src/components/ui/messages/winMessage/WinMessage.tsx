@@ -1,5 +1,5 @@
 import {type Dispatch, type SetStateAction} from "react";
-import {CloseIcon, ErrorIcon} from "../../../../assets/SvgToTsx.tsx";
+import {CelebrateIcon, CloseIcon} from "../../../../assets/SvgToTsx.tsx";
 import DefaultMessage from "../defaultMessage/DefaultMessage.tsx";
 import type {PlinkoHistoryItemType} from "../../../../utils/types/Plinko.type.ts";
 
@@ -33,10 +33,10 @@ function WinMessage({
         >
             <div className={'flex items-center gap-[12px]'}>
                 <div className={'flex items-center gap-[10px]'}>
-                    <ErrorIcon className={'w-5 h-5'}/>
-                    <p className={'text-white font-semibold uppercase'}>you win</p>
+                    <CelebrateIcon className={'w-5 h-5'}/>
+                    <p className={'text-white font-semibold uppercase whitespace-nowrap'}>you win</p>
                     <div
-                        className={'h-6 bg-[#00c853] rounded-full uppercase px-3 flex items-center text-white text-[12px] font-semibold leading-[15px]'}>
+                        className={'h-6 bg-[#00c853] whitespace-nowrap rounded-full uppercase px-3 flex items-center text-white text-[12px] font-semibold leading-[15px]'}>
                         ${win?.profit} USD
                     </div>
                 </div>

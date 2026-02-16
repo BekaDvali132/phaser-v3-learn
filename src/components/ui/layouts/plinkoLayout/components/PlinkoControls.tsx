@@ -3,6 +3,7 @@ import {useState} from "react";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import PlinkoAutoBet from "./PlinkoAutoBet.tsx";
 import ErrorMessage from "../../../messages/errorMessage/ErrorMessage.tsx";
+import PlinkoHistory from "../../../plinkoHistory/PlinkoHistory.tsx";
 
 interface Props {
     className: string
@@ -39,31 +40,31 @@ function PlinkoControls({className}:Props) {
 
     return (
         <div
-            className={`flex w-full my-container absolute bottom-[76px] gap-2 select-none duration-300 ease-out ${className}`}>
+            className={`grid grid-cols-2 md:flex w-full my-container md:absolute md:bottom-[76px] gap-2 select-none duration-300 ease-out ${className}`}>
             <PlinkoControl handleDecrease={handleRowDecrease} handleIncrease={handleRowsIncrease}
                            increaseDisabled={rows >= 14} decreaseDisabled={rows <= 1}>
                 <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>Rows</p>
-                    <p className={'text-[20px] uppercase text-white leading-[15px] text-center'}>{rows}</p>
+                    <p className={'font-semibold text-[12px] md:text-[14px] uppercase text-white leading-[14px] text-center'}>Rows</p>
+                    <p className={'text-[14px] md:text-[20px] text-white leading-[10px] md:leading-[15px] text-center'}>{rows}</p>
                 </div>
             </PlinkoControl>
             <PlinkoControl handleDecrease={handleRiskDecrease} handleIncrease={handleRiskIncrease}
                            decreaseDisabled={riskCost <= 0.1}>
                 <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>
-                        Risk cost <span className={'text-[#ffffff66]'}>(USD)</span>
+                    <p className={'font-semibold text-[12px] md:text-[14px] uppercase text-white leading-[14px] text-center'}>
+                        Risk cost <span className={'md:block hidden text-[#ffffff66]'}>(USD)</span>
                     </p>
-                    <p className={'text-[20px] uppercase text-white leading-[15px] text-center'}>{riskCost}</p>
+                    <p className={'text-[14px] md:text-[20px] text-white leading-[10px] md:leading-[15px] text-center'}>{riskCost}</p>
                 </div>
             </PlinkoControl>
-            <PlinkoControl handleDecrease={handleFruitsDecrease} handleIncrease={handleFruitsIncrease}
+            <PlinkoControl className={'col-span-2'} handleDecrease={handleFruitsDecrease} handleIncrease={handleFruitsIncrease}
                            decreaseDisabled={fruits <= 1}>
-                <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>
+                <div className="flex flex-col gap-1 md:gap-2">
+                    <p className={'font-semibold text-[12px] md:text-[14px] uppercase text-white leading-[14px] text-center'}>
                         Drop {fruits} fruit
                     </p>
-                    <div className={'px-[10px] h-[21px] flex items-center bg-[#a855f7] rounded-full'}>
-                        <p className={'text-[12px] w-full font-semibold uppercase text-white leading-[15px] text-center'}>
+                    <div className={'px-6 md:px-[10px] h-[18px] md:h-[21px] flex items-center bg-[#a855f7] rounded-full'}>
+                        <p className={'text-[10px] md:text-[12px] w-full font-semibold uppercase text-white leading-3 md:leading-[15px] text-center'}>
                             Bet amount $0.50
                         </p>
                     </div>
@@ -76,7 +77,7 @@ function PlinkoControls({className}:Props) {
                     gameEvents.emit('dropBall');
                 }}
                 type={'button'}
-                className={'h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
+                className={'h-13 md:h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
             >
                 <img src="/plinkoGameAssets/plinkoPlayButtonBg.webp" alt="Plinko Play Button"
                      className={'w-full h-full absolute left-0 top-0'}/>
@@ -84,6 +85,7 @@ function PlinkoControls({className}:Props) {
                     play
                 </span>
             </button>
+            <PlinkoHistory className={'md:hidden col-span-2 w-full'}/>
             <ErrorMessage label={'Insufficient balance'} className={'fixed right-[54px] bottom-[184px]'} show={showError} setShow={setShowError} />
         </div>
     );
