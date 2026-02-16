@@ -2,11 +2,13 @@ import PlinkoControl from "./PlinkoControl.tsx";
 import {useState} from "react";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import PlinkoAutoBet from "./PlinkoAutoBet.tsx";
+import ErrorMessage from "../../../messages/errorMessage/ErrorMessage.tsx";
 
 interface Props {
     className: string
 }
 function PlinkoControls({className}:Props) {
+    const [showError, setShowError] = useState(false);
     const [rows, setRows] = useState(14);
     const [riskCost, setRiskCost] = useState(0.1);
     const [fruits, setFruits] = useState(1);
@@ -70,6 +72,7 @@ function PlinkoControls({className}:Props) {
             <PlinkoAutoBet />
             <button
                 onClick={() => {
+                    setShowError(true)
                     gameEvents.emit('dropBall');
                 }}
                 type={'button'}
@@ -81,6 +84,7 @@ function PlinkoControls({className}:Props) {
                     play
                 </span>
             </button>
+            <ErrorMessage label={'Insufficient balance'} className={'fixed right-[54px] bottom-[184px]'} show={showError} setShow={setShowError} />
         </div>
     );
 }
