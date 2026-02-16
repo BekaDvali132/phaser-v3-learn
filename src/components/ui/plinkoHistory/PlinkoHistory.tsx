@@ -6,7 +6,12 @@ import WinMessage from "../messages/winMessage/WinMessage.tsx";
 
 const paragraphClass = 'text-white font-semibold text-[14px] uppercase';
 
-function PlinkoHistory() {
+interface Props {
+    className: string
+}
+function PlinkoHistory({
+                           className
+                       }:Props) {
     const [lastWin, setLastWin] = useState<PlinkoHistoryItemType | undefined>(undefined)
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
@@ -44,7 +49,7 @@ function PlinkoHistory() {
     }
 
     return (
-        <div className={'flex flex-col gap-3 w-[342px]'}>
+        <div className={`flex flex-col gap-3 w-[342px] ${className}`}>
             <div className="grid grid-cols-4 items-center gap-3 px-2"
             >
                 <p className={`${paragraphClass}`}>Time</p>

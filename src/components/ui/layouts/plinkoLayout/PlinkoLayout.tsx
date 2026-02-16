@@ -34,9 +34,9 @@ function PlinkoLayout({children}: Props) {
                 {children}
             </main>
             <div
-                className={`w-full my-container absolute flex justify-between top-[170px] px-[60px] duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                <PlinkoHistory/>
-                <div className="flex gap-12">
+                className={`w-full my-container absolute flex justify-between top-[72px] md:top-[170px] px-[60px] duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                <PlinkoHistory className={'lg:flex hidden'}/>
+                <div className="flex gap-12 lg:w-fit w-full lg:justify-normal justify-between">
                     <PlinkoBallsBoard/>
                     <PlinkoRiskLevelsList/>
                 </div>
