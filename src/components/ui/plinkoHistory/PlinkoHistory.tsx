@@ -2,15 +2,16 @@ import PlinkoHistoryItem from "./components/PlinkoHistoryItem.tsx";
 import {useEffect, useState} from "react";
 import {gameEvents} from "../../../utils/gameEvents.ts";
 import type {PlinkoHistoryItemType} from "../../../utils/types/Plinko.type.ts";
+import WinMessage from "../messages/winMessage/WinMessage.tsx";
 
 const paragraphClass = 'text-white font-semibold text-[14px] uppercase';
 
 function PlinkoHistory() {
+    const [lastWin, setLastWin] = useState<PlinkoHistoryItemType | undefined>(undefined)
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
     useEffect(() => {
         gameEvents.on('ballDropped', (data: PlinkoHistoryItemType) => {
-            console.log(data)
             if (!history?.[data?.id]) {
                 setHistory(
                     (prev) => ({
@@ -18,6 +19,9 @@ function PlinkoHistory() {
                         [data.id]: data
                     })
                 )
+                if (!lastWin?.id) {
+                    setLastWin(data)
+                }
             }
         });
 
@@ -60,6 +64,11 @@ function PlinkoHistory() {
                     />)}
                 </div>
             </div>
+            <WinMessage
+                className={'top-[81px] fixed left-1/2 -translate-x-1/2'}
+                win={lastWin}
+                setWin={setLastWin}
+            />
         </div>
     );
 }
