@@ -6,6 +6,7 @@ import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
+import {plinkoCreateWheel} from "./components/plinkoCreateWheel.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -102,9 +103,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             scene: this
         });
 
-        this.objects.wheel = this.add.video(WHEEL_CENTER_X, WHEEL_CENTER_Y, 'wheel');
-        this.objects.wheel.setDisplaySize(125, 125);
-        this.objects.wheel.play(true);
+        plinkoCreateWheel({objects: this.objects, this: this})
 
         plinkoCreatePegs({objects: this.objects, this: this});
 
