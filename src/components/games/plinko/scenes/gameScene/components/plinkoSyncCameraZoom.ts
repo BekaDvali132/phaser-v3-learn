@@ -27,15 +27,14 @@ export default function plinkoSyncCameraZoom({
     const dpr = getDPR(scene);
     const screenWidth = scene.scale.width / dpr;
     const screenHeight = scene.scale.height / dpr;
-
+    const sceneHeight = scene.scale.height / zoom;
     scene.cameras.main.setZoom(zoom);
-    scene.cameras.main.centerOn(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
-
+    scene.cameras.main.centerOn(VIRTUAL_WIDTH / 2, sceneHeight / 2);
     if (objects.backgroundVideo) {
         const scaleX = (screenWidth * dpr) / objects.backgroundVideo.width;
         const scaleY = (screenHeight * dpr) / objects.backgroundVideo.height;
         const bgScale = Math.max(scaleX, scaleY) / zoom;
         objects.backgroundVideo.setScale(bgScale);
-        objects.backgroundVideo.setPosition(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2);
+        objects.backgroundVideo.setPosition(VIRTUAL_WIDTH / 2, sceneHeight / 2);
     }
 }

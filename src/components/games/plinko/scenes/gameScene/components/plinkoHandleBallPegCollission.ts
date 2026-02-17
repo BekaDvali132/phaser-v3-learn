@@ -63,5 +63,4 @@ export default function plinkoHandleBallPegCollission(
         }
     });
 
-    console.log(`Peg Row ${pegRowIndex}: Going ${direction === -1 ? 'LEFT' : 'RIGHT'}`);
 }

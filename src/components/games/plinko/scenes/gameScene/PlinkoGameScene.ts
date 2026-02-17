@@ -22,7 +22,7 @@ export type PlinkoGameObjectsType = {
 
 // game dimensions
 export const VIRTUAL_WIDTH = 800;
-export let VIRTUAL_HEIGHT = window.innerWidth > 768 ? 1000 : 2000;
+export const VIRTUAL_HEIGHT = 1000;
 export const WHEEL_CENTER_X = VIRTUAL_WIDTH / 2;
 export const WHEEL_CENTER_Y = -5;
 
@@ -48,7 +48,6 @@ export class PlinkoGameScene extends Phaser.Scene {
     device: 'desktop' | 'mobile' = 'desktop';
 
     handleResize() {
-        VIRTUAL_HEIGHT = window.innerWidth > 768 ? 1000 : 2000;
         plinkoSyncCameraZoom({
             scene: this,
             objects: this.objects
