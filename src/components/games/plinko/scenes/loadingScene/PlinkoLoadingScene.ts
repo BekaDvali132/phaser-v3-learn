@@ -1,3 +1,5 @@
+import {gameEvents} from "../../../../../utils/gameEvents.ts";
+
 export class PlinkoLoadingScene extends Phaser.Scene {
     private loadingVideo?: Phaser.GameObjects.Video;
     private progressBox?: Phaser.GameObjects.Graphics;
@@ -165,6 +167,8 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         this.input.keyboard?.once('keydown', () => {
             this.startGame();
         });
+
+        gameEvents.on('startGame', this.startGame);
     }
 
     startGame() {

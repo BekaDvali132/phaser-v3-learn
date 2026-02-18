@@ -1,8 +1,11 @@
 import PlinkoHeaderControls from "./PlinkoHeaderControls.tsx";
 
-function PlinkoHeader() {
+interface Props {
+    className: string
+}
+function PlinkoHeader({className}:Props) {
     return (
-        <header className={'py-[10px] md:py-[14px] z-10 my-container flex items-center justify-between'}>
+        <header className={`py-[10px] md:py-[14px] z-10 my-container flex items-center justify-between ${className}`}>
             <img
             className={'md:w-[164px] w-[62px] h-11 object-contain md:h-20'}
                 src="/plinkoGameAssets/plinkoLogo.webp" width={164} height={80} alt="Logo"/>
