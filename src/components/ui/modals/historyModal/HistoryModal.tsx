@@ -3,6 +3,7 @@ import DefaultModal from "../defaultModal/DefaultModal.tsx";
 import type {PlinkoHistoryItemType} from "../../../../utils/types/Plinko.type.ts";
 import {gameEvents} from "../../../../utils/gameEvents.ts";
 import PlinkoHistoryItem from "../../plinkoHistory/components/PlinkoHistoryItem.tsx";
+import {GameEventsEnum} from "../../../../utils/enums/gameEvents.enum.ts";
 
 interface Props {
     show: boolean;
@@ -15,7 +16,7 @@ function HistoryModal({show, setShow}: Props) {
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
     useEffect(() => {
-        gameEvents.on('ballDropped', (data: PlinkoHistoryItemType) => {
+        gameEvents.on(GameEventsEnum.BALL_DROPPED, (data: PlinkoHistoryItemType) => {
             if (!history?.[data?.id]) {
                 setHistory(
                     (prev) => ({
@@ -27,7 +28,7 @@ function HistoryModal({show, setShow}: Props) {
         });
 
         return () => {
-            gameEvents.off('ballDropped', () => {
+            gameEvents.off(GameEventsEnum.BALL_DROPPED, () => {
             })
         }
     }, [])

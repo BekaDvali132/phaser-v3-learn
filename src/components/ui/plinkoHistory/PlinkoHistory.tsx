@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {gameEvents} from "../../../utils/gameEvents.ts";
 import type {PlinkoHistoryItemType} from "../../../utils/types/Plinko.type.ts";
 import WinMessage from "../messages/winMessage/WinMessage.tsx";
+import {GameEventsEnum} from "../../../utils/enums/gameEvents.enum.ts";
 
 const paragraphClass = 'text-white font-semibold text-[14px] uppercase';
 
@@ -17,7 +18,7 @@ function PlinkoHistory({
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
     useEffect(() => {
-        gameEvents.on('ballDropped', (data: PlinkoHistoryItemType) => {
+        gameEvents.on(GameEventsEnum.BALL_DROPPED, (data: PlinkoHistoryItemType) => {
             if (!history?.[data?.id]) {
                 setHistory(
                     (prev) => ({
@@ -32,7 +33,7 @@ function PlinkoHistory({
         });
 
         return () => {
-            gameEvents.off('ballDropped', () => {
+            gameEvents.off(GameEventsEnum.BALL_DROPPED, () => {
             })
         }
     }, [])

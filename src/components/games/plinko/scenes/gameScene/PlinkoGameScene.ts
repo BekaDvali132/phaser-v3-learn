@@ -7,6 +7,7 @@ import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
 import {plinkoCreateWheel} from "./components/plinkoCreateWheel.ts";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -114,7 +115,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        gameEvents.on('dropBall', this.handleDropBall.bind(this));
+        gameEvents.on(GameEventsEnum.DROP_BALL, this.handleDropBall.bind(this));
 
         this.handleResize();
 
@@ -126,7 +127,7 @@ export class PlinkoGameScene extends Phaser.Scene {
         //     device: this.device
         // })
 
-        gameEvents.emit('gameLoaded');
+        gameEvents.emit(GameEventsEnum.GAME_LOADED);
     }
 
     update() {
@@ -147,7 +148,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     destroy() {
         this.scale.off('resize', this.handleResize, this);
 
-        gameEvents.off('dropBall', this.handleDropBall);
+        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBall);
 
         if (this.objects.backgroundVideo) {
             this.objects.backgroundVideo.stop();

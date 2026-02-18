@@ -4,6 +4,7 @@ import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import PlinkoAutoBet from "./PlinkoAutoBet.tsx";
 import ErrorMessage from "../../../messages/errorMessage/ErrorMessage.tsx";
 import PlinkoHistory from "../../../plinkoHistory/PlinkoHistory.tsx";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 
 interface Props {
     className: string
@@ -74,7 +75,7 @@ function PlinkoControls({className}:Props) {
             <button
                 onClick={() => {
                     setShowError(true)
-                    gameEvents.emit('dropBall');
+                    gameEvents.emit(GameEventsEnum.DROP_BALL);
                 }}
                 type={'button'}
                 className={'h-13 lg:h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}

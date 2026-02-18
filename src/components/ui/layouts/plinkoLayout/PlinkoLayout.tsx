@@ -6,6 +6,7 @@ import PlinkoBallsBoard from "../../plinkoBallsBoard/PlinkoBallsBoard.tsx";
 import {useEffect, useState} from "react";
 import {gameEvents} from "../../../../utils/gameEvents.ts";
 import PlinkoRiskLevelsList from "../../plinkoRiskLevel/PlinkoRiskLevelsList.tsx";
+import {GameEventsEnum} from "../../../../utils/enums/gameEvents.enum.ts";
 
 interface Props {
     children: React.ReactNode;
@@ -16,12 +17,12 @@ function PlinkoLayout({children}: Props) {
 
 
     useEffect(() => {
-        gameEvents.on('gameLoaded', () => {
+        gameEvents.on(GameEventsEnum.GAME_LOADED, () => {
             setShow(true);
         });
 
         return () => {
-            gameEvents.off('gameLoaded', () => {
+            gameEvents.off(GameEventsEnum.GAME_LOADED, () => {
                 setShow(false)
             })
         }
@@ -29,7 +30,7 @@ function PlinkoLayout({children}: Props) {
 
     const handleStartGame = () => {
         if (!show) {
-            gameEvents.emit('startGame');
+            gameEvents.emit(GameEventsEnum.START_GAME);
         }
     }
 

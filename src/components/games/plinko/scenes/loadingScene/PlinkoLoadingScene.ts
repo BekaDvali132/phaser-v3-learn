@@ -1,4 +1,5 @@
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 
 export class PlinkoLoadingScene extends Phaser.Scene {
     private loadingVideo?: Phaser.GameObjects.Video;
@@ -168,7 +169,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
             this.startGame();
         });
 
-        gameEvents.on('startGame', this.startGame);
+        gameEvents.on(GameEventsEnum.START_GAME, this.startGame);
     }
 
     startGame() {
