@@ -1,4 +1,4 @@
-import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import type {PlinkoGameObjectsType, PlinkoGameSoundsType} from "../PlinkoGameScene.ts";
 import plinkoHandleBallPegCollission from "./plinkoHandleBallPegCollission.ts";
 import plinkoHandleBallMultiplierHit from "./plinkoHandleBallMultiplierHit.ts";
 
@@ -6,7 +6,8 @@ interface Props {
     this: Phaser.Scene & {
         matter: Phaser.Physics.Matter.MatterPhysics;
     };
-    objects: PlinkoGameObjectsType
+    objects: PlinkoGameObjectsType;
+    sounds: PlinkoGameSoundsType
 }
 
 function getBallFromBody(body: MatterJS.BodyType, objects: PlinkoGameObjectsType): Phaser.Physics.Matter.Image | null {
@@ -31,7 +32,7 @@ function getMultiplierFromBody(body: MatterJS.BodyType, objects: PlinkoGameObjec
     return multiplier || null;
 }
 
-export default function plinkoSetupCollissions({this: scene, objects}: Props): void {
+export default function plinkoSetupCollissions({this: scene, objects, sounds}: Props): void {
     scene.matter.world.on('collisionstart', (event: { pairs: { bodyA: MatterJS.BodyType; bodyB: MatterJS.BodyType }[] }) => {
         event.pairs.forEach((pair: { bodyA: MatterJS.BodyType; bodyB: MatterJS.BodyType }) => {
             const {bodyA, bodyB} = pair;
@@ -50,7 +51,8 @@ export default function plinkoSetupCollissions({this: scene, objects}: Props): v
                     ball,
                     multiplier,
                     scene,
-                    objects
+                    objects,
+                    sounds
                 })
             }
         });

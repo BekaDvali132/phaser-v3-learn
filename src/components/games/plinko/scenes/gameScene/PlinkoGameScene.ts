@@ -8,6 +8,8 @@ import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts
 import plinkoGenerateRandomBallPath from "./components/plinkoGenerateRandomBallPath.ts";
 import {plinkoCreateWheel} from "./components/plinkoCreateWheel.ts";
 import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
+import {plinkoToggleSound} from "./components/plinkoToggleSound.ts";
+import {plinkoToggleMusic} from "./components/plinkoToggleMusic.ts";
 
 export type PlinkoGameObjectsType = {
     pegs: Phaser.Physics.Matter.Image[],
@@ -20,6 +22,11 @@ export type PlinkoGameObjectsType = {
     dropButtonText: Phaser.GameObjects.Text | null,
     gameContainer: Phaser.GameObjects.Container | null,
     ballsBoard: Phaser.GameObjects.Container | null
+}
+
+export type PlinkoGameSoundsType = {
+    success: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | null,
+    background: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | null
 }
 
 // game dimensions
@@ -48,6 +55,11 @@ export class PlinkoGameScene extends Phaser.Scene {
         ballsBoard: null
     }
     device: 'desktop' | 'mobile' = 'desktop';
+    sounds: PlinkoGameSoundsType = {
+        success: null,
+        background: null,
+    };
+
 
     handleResize() {
         plinkoSyncCameraZoom({
@@ -89,6 +101,11 @@ export class PlinkoGameScene extends Phaser.Scene {
     }
 
     create() {
+        this.sounds = {
+            success: this.sound.add('success', { loop: false }),
+            background: this.sound.add('background', { loop: true }),
+        };
+
         const canvas = document.getElementById('game');
 
         if (canvas) {
@@ -112,10 +129,19 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         plinkoSetupCollissions({
             this: this,
-            objects: this.objects
+            objects: this.objects,
+            sounds: this.sounds
         });
 
         gameEvents.on(GameEventsEnum.DROP_BALL, this.handleDropBall.bind(this));
+        gameEvents.on(GameEventsEnum.TOGGLE_SOUND, ({turnOn}) => plinkoToggleSound({
+          turnOn,
+          sounds: this.sounds
+        }));
+        gameEvents.on(GameEventsEnum.TOGGLE_MUSIC, ({turnOn}) => plinkoToggleMusic({
+          turnOn,
+          sounds: this.sounds
+        }));
 
         this.handleResize();
 
@@ -128,6 +154,14 @@ export class PlinkoGameScene extends Phaser.Scene {
         // })
 
         gameEvents.emit(GameEventsEnum.GAME_LOADED);
+
+        setTimeout(() => {
+            this.handleResize()
+        }, 100)
+
+        if (this.sounds?.background) {
+            this.sounds.background.play({loop: true});
+        }
     }
 
     update() {

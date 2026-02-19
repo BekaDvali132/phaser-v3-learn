@@ -14,10 +14,10 @@ export class PlinkoLoadingScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.video('loadingVideo', '/plinkoGameAssets/plinkoLoading.mp4');
-
         const width = this.scale.width;
         const height = this.scale.height;
+        const parentWidth = this.scale.parentSize.width;
+        this.load.video('loadingVideo', parentWidth < 1024 ? '/plinkoGameAssets/plinkoMobileLoading.mp4' : '/plinkoGameAssets/plinkoLoading.mp4');
 
         this.progressBox = this.add.graphics();
         this.progressBox.fillStyle(0x222222, 0.8);
@@ -76,7 +76,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
             frameWidth: 128,  // Width of each multiplier frame
             frameHeight: 92 // Height of each multiplier frame
         });
-        
+
         // Load fruit ball images
         this.load.image('lemon', '/plinkoGameAssets/plinkoLemon.png');
         this.load.image('cherry', '/plinkoGameAssets/plinkoCherry.png');
@@ -86,6 +86,8 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         this.load.image('grape', '/plinkoGameAssets/plinkoGrape.png');
         this.load.image('plum', '/plinkoGameAssets/plinkoPlum.png');
         this.load.image('star', '/plinkoGameAssets/plinkoStar.png');
+        this.load.audio('background', '/plinkoGameAssets/plinkoBackgroundSong.mp3');
+        this.load.audio('success', '/plinkoGameAssets/plinkoSuccessAchieved.mp3');
     }
 
     create() {
@@ -110,7 +112,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
 
     updateVideoScale() {
         if (!this.loadingVideo) return;
-        
+
         const videoWidth = this.loadingVideo.width;
         const videoHeight = this.loadingVideo.height;
         const canvasWidth = this.scale.width;
