@@ -33,6 +33,10 @@ export const WHEEL_CENTER_Y = -5;
 
 export class PlinkoGameScene extends Phaser.Scene {
 
+    private handleDropBallEvent = () => {
+        void this.handleDropBall();
+    };
+
     constructor() {
         super({key: 'PlinkoGameScene'});
     }
@@ -123,11 +127,17 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        gameEvents.on(GameEventsEnum.DROP_BALL, this.handleDropBall.bind(this));
+        gameEvents.on(GameEventsEnum.DROP_BALL, this.handleDropBallEvent);
 
         this.handleResize();
 
         this.scale.on('resize', this.handleResize, this);
+
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            this.scale.off('resize', this.handleResize, this);
+            gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBallEvent);
+            cleanupGlowPool();
+        });
 
         // plinkoCreateBallsBoard({
         //     scene: this,
@@ -158,7 +168,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     destroy() {
         this.scale.off('resize', this.handleResize, this);
 
-        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBall);
+        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBallEvent);
 
         cleanupGlowPool();
 
