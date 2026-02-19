@@ -1,5 +1,9 @@
 import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
 import {gameEvents} from "../../../../../../utils/gameEvents.ts";
+import {gameEvents} from "../../../../../../utils/gameEvents.ts";
+import type {PlinkoHistoryItemType} from "../../../../../../utils/types/Plinko.type.ts";
+import dayjs from "dayjs";
+import {GameEventsEnum} from "../../../../../../utils/enums/gameEvents.enum.ts";
 
 interface Props {
     ball: Phaser.Physics.Matter.Image,
@@ -56,4 +60,14 @@ export default function plinkoHandleBallMultiplierHit({
             multiplier.setData('isAnimating', false);
         }
     });
+
+    const multiplierVal = multiplier.getData('value')
+    gameEvents.emit(GameEventsEnum.BALL_DROPPED,{
+        id: ball.getData('id'),
+        time: dayjs().format('HH:mm:ss'),
+        payout: multiplierVal,
+        totalBet: 2,
+        profit: multiplierVal * 2,
+        createdAt: Date.now(),
+    } as PlinkoHistoryItemType)
 }

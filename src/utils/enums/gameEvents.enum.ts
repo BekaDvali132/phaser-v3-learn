@@ -1,0 +1,6 @@
+export enum GameEventsEnum {
+    START_GAME = 'startGame',
+    GAME_LOADED = 'gameLoaded',
+    DROP_BALL = 'dropBall',
+    BALL_DROPPED = 'ballDropped'
+}

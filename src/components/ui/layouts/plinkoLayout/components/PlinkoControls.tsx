@@ -1,9 +1,16 @@
 import PlinkoControl from "./PlinkoControl.tsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
+import PlinkoAutoBet from "./PlinkoAutoBet.tsx";
+import ErrorMessage from "../../../messages/errorMessage/ErrorMessage.tsx";
+import PlinkoHistory from "../../../plinkoHistory/PlinkoHistory.tsx";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 
-function PlinkoControls() {
-    const [show, setShow] = useState(false);
+interface Props {
+    className: string
+}
+function PlinkoControls({className}:Props) {
+    const [showError, setShowError] = useState(false);
     const [rows, setRows] = useState(14);
     const [riskCost, setRiskCost] = useState(0.1);
     const [fruits, setFruits] = useState(1);
@@ -32,62 +39,46 @@ function PlinkoControls() {
         setFruits((prev) => prev - 1);
     }
 
-    useEffect(() => {
-        gameEvents.on('gameLoaded', () => {
-            setShow(true);
-        });
-
-        return () => {
-            gameEvents.off('gameLoaded', () => {
-                setShow(false)
-            })
-        }
-    }, [])
-
     return (
         <div
-            className={`flex w-full my-container absolute bottom-[76px] gap-2 select-none duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            className={`grid grid-cols-2 lg:flex w-full my-container lg:absolute lg:bottom-[76px] gap-2 select-none duration-300 ease-out ${className}`}>
             <PlinkoControl handleDecrease={handleRowDecrease} handleIncrease={handleRowsIncrease}
                            increaseDisabled={rows >= 14} decreaseDisabled={rows <= 1}>
                 <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>Rows</p>
-                    <p className={'text-[20px] uppercase text-white leading-[15px] text-center'}>{rows}</p>
+                    <p className={'font-semibold text-[12px] lg:text-[14px] uppercase text-white leading-[14px] text-center'}>Rows</p>
+                    <p className={'text-[14px] lg:text-[20px] text-white leading-[10px] lg:leading-[15px] text-center'}>{rows}</p>
                 </div>
             </PlinkoControl>
             <PlinkoControl handleDecrease={handleRiskDecrease} handleIncrease={handleRiskIncrease}
                            decreaseDisabled={riskCost <= 0.1}>
                 <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>
-                        Risk cost <span className={'text-[#ffffff66]'}>(USD)</span>
+                    <p className={'font-semibold text-[12px] lg:text-[14px] uppercase text-white leading-[14px] text-center'}>
+                        Risk cost <span className={'lg:block hidden text-[#ffffff66]'}>(USD)</span>
                     </p>
-                    <p className={'text-[20px] uppercase text-white leading-[15px] text-center'}>{riskCost}</p>
+                    <p className={'text-[14px] lg:text-[20px] text-white leading-[10px] lg:leading-[15px] text-center'}>{riskCost}</p>
                 </div>
             </PlinkoControl>
-            <PlinkoControl handleDecrease={handleFruitsDecrease} handleIncrease={handleFruitsIncrease}
+            <PlinkoControl className={'col-span-2'} handleDecrease={handleFruitsDecrease} handleIncrease={handleFruitsIncrease}
                            decreaseDisabled={fruits <= 1}>
-                <div className="flex flex-col gap-2">
-                    <p className={'font-semibold text-[14px] uppercase text-white leading-[14px] text-center'}>
+                <div className="flex flex-col gap-1 lg:gap-2">
+                    <p className={'font-semibold text-[12px] lg:text-[14px] uppercase text-white leading-[14px] text-center'}>
                         Drop {fruits} fruit
                     </p>
-                    <div className={'px-[10px] h-[21px] flex items-center bg-[#a855f7] rounded-full'}>
-                        <p className={'text-[12px] w-full font-semibold uppercase text-white leading-[15px] text-center'}>
+                    <div className={'px-6 lg:px-[10px] h-[18px] lg:h-[21px] flex items-center bg-[#a855f7] rounded-full'}>
+                        <p className={'text-[10px] lg:text-[12px] w-full font-semibold uppercase text-white leading-3 lg:leading-[15px] text-center'}>
                             Bet amount $0.50
                         </p>
                     </div>
                 </div>
             </PlinkoControl>
-            <button
-                type={'button'}
-                className={'h-[66px] px-[21px] rounded-2xl bg-[#ff9608] text-[#0f002a] font-semibold uppercase text-[16px] cursor-pointer'}
-            >
-                autobet
-            </button>
+            <PlinkoAutoBet />
             <button
                 onClick={() => {
-                    gameEvents.emit('dropBall');
+                    setShowError(true)
+                    gameEvents.emit(GameEventsEnum.DROP_BALL);
                 }}
                 type={'button'}
-                className={'h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
+                className={'h-13 lg:h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
             >
                 <img src="/plinkoGameAssets/plinkoPlayButtonBg.webp" alt="Plinko Play Button"
                      className={'w-full h-full absolute left-0 top-0'}/>
@@ -95,6 +86,8 @@ function PlinkoControls() {
                     play
                 </span>
             </button>
+            <PlinkoHistory className={'lg:hidden col-span-2 w-full'}/>
+            <ErrorMessage label={'Insufficient balance'} className={'fixed right-[54px] bottom-[184px]'} show={showError} setShow={setShowError} />
         </div>
     );
 }

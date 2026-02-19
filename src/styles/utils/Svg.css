@@ -1,0 +1,24 @@
+@keyframes wifiFirstAnimation {
+    0%   { opacity: 1; }
+    25%   { opacity: 1; }
+    50%   { opacity: 0.5%; }
+}
+
+@keyframes wifiSecondAnimation {
+    0%   { opacity: 1; }
+    50%   { opacity: 0; }
+}
+
+/* Apply the animation to the SVG path */
+.wifi-icon path[data-name='second-bar'] {
+    animation: wifiSecondAnimation 1.2s infinite;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+}
+
+/* Apply the animation to the SVG path */
+.wifi-icon path[data-name='first-bar'] {
+    animation: wifiFirstAnimation 1.2s infinite;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+}

@@ -5,7 +5,8 @@ import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackgroun
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
-import plinkoCreateBallsBoard from "./components/plinkoCreateBallsBoard.ts";
+import {plinkoCreateWheel} from "./components/plinkoCreateWheel.ts";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 import { registerBallTest } from "../../../../../utils/plinkoGameTest.ts";
 import { plinkoGenerateRandomBallPathFixed } from "./components/plinkoGenerateRandomBallPath.ts";
 import { cleanupGlowPool } from "./components/plinkoCreatePegGlow.ts";
@@ -61,19 +62,18 @@ export class PlinkoGameScene extends Phaser.Scene {
         if (canvas) {
             if (canvas.clientWidth < 1024 && this.device === 'desktop') {
                 this.device = 'mobile';
-                console.log('chage')
-                plinkoCreateBallsBoard({
-                    scene: this,
-                    objects: this.objects,
-                    device: this.device
-                })
+                // plinkoCreateBallsBoard({
+                //     scene: this,
+                //     objects: this.objects,
+                //     device: this.device
+                // })
             } else if (canvas.clientWidth > 1023 && this.device === 'mobile') {
                 this.device = 'desktop';
-                plinkoCreateBallsBoard({
-                    scene: this,
-                    objects: this.objects,
-                    device: this.device
-                })
+                // plinkoCreateBallsBoard({
+                //     scene: this,
+                //     objects: this.objects,
+                //     device: this.device
+                // })
             }
         }
     }
@@ -112,9 +112,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             scene: this
         });
 
-        this.objects.wheel = this.add.video(WHEEL_CENTER_X, WHEEL_CENTER_Y, 'wheel');
-        this.objects.wheel.setDisplaySize(125, 125);
-        this.objects.wheel.play(true);
+        plinkoCreateWheel({objects: this.objects, this: this})
 
         plinkoCreatePegs({objects: this.objects, this: this});
 
@@ -125,19 +123,19 @@ export class PlinkoGameScene extends Phaser.Scene {
             objects: this.objects
         });
 
-        gameEvents.on('dropBall', this.handleDropBall.bind(this));
+        gameEvents.on(GameEventsEnum.DROP_BALL, this.handleDropBall.bind(this));
 
         this.handleResize();
 
         this.scale.on('resize', this.handleResize, this);
 
-        plinkoCreateBallsBoard({
-            scene: this,
-            objects: this.objects,
-            device: this.device
-        })
+        // plinkoCreateBallsBoard({
+        //     scene: this,
+        //     objects: this.objects,
+        //     device: this.device
+        // })
 
-        gameEvents.emit('gameLoaded');
+        gameEvents.emit(GameEventsEnum.GAME_LOADED);
     }
 
     update() {
@@ -160,7 +158,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     destroy() {
         this.scale.off('resize', this.handleResize, this);
 
-        gameEvents.off('dropBall', this.handleDropBall);
+        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBall);
 
         cleanupGlowPool();
 
