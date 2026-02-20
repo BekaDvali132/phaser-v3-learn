@@ -1,12 +1,8 @@
-import {type Dispatch, type SetStateAction, useState} from 'react';
+import {useState} from 'react';
 import DefaultModal from "../defaultModal/DefaultModal.tsx";
 import AutoBetOption from "./components/AutoBetOption.tsx";
 import {InfinityIcon} from "../../../../assets/SvgToTsx.tsx";
-
-interface Props {
-    show: boolean;
-    setShow: Dispatch<SetStateAction<boolean>>
-}
+import {useModalStore} from "../../../../store/modalStore.ts";
 
 const options = [
     {
@@ -27,12 +23,20 @@ const options = [
     },
 ]
 
-function AutoBetModal({show, setShow}: Props) {
+function AutoBetModal() {
+    const show = useModalStore(
+        state => state.autoBetModal,
+    );
+    const toggleModal = useModalStore(
+        state => state.toggleModal,
+    );
+
     const [activeKey, setActiveKey] = useState<typeof options[number]['key']>()
+
     return (
         <DefaultModal
             width={378}
-            setShow={setShow}
+            setShow={() => toggleModal('autoBetModal')}
             show={show}
             title={'autobet'}
             closeOnEscape
@@ -56,7 +60,7 @@ function AutoBetModal({show, setShow}: Props) {
                         type={'button'}
                         onClick={() => {
                             setActiveKey(undefined);
-                            setShow(false)
+                            toggleModal('autoBetModal')
                         }}
                         className={'h-13 rounded-2xl bg-[#0f002ab2] text-[#ffffff66] border border-solid border-[#ffffff1a] font-semibold uppercase text-[16px] cursor-pointer'}
                     >
@@ -65,7 +69,7 @@ function AutoBetModal({show, setShow}: Props) {
                     <button
                         type={'button'}
                         disabled={!activeKey}
-                        onClick={() => setShow(false)}
+                        onClick={() => toggleModal('autoBetModal')}
                         className={'h-13 rounded-2xl bg-[#ff9608] text-[#0f002a] font-semibold uppercase text-[16px] cursor-pointer disabled:opacity-50 duration-300 ease-out'}
                     >
                         Start
