@@ -27,8 +27,10 @@ function ErrorMessage({
             className={`bg-[#d5000033] border border-solid border-[#d50000] ${className}`}
         >
             <div className={'flex items-center gap-3'}>
-                <ErrorIcon className={'w-5 h-5'}/>
-                <p className={'text-[14px] font-semibold text-white uppercase leading-[17px]'}>{label}</p>
+                <div className={'flex items-center gap-[10px]'}>
+                    <ErrorIcon className={'w-5 h-5'}/>
+                    <p className={'text-[14px] font-semibold text-white whitespace-nowrap uppercase leading-[17px]'}>{label}</p>
+                </div>
                 <CloseIcon className={'w-4 h-4 cursor-pointer'} onClick={handleClose}/>
             </div>
         </DefaultMessage>

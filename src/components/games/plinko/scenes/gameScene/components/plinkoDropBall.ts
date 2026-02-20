@@ -18,23 +18,36 @@ interface Props {
     ballImage: BallImageType;
 }
 
-export default function plinkoDropBall({ objects, this: scene, ballPath, ballImage }: Props): Phaser.Physics.Matter.Image{
+const MIN_ROWS = 7;
+const MAX_ROWS = 14;
+
+const MAX_BALL_SIZE = 32;
+const MIN_BALL_SIZE = 48;
+
+function lerp(min: number, max: number, t: number): number {
+    return min + (max - min) * t;
+}
+
+export default function plinkoDropBall({ objects, this: scene, ballPath, ballImage }: Props): Phaser.Physics.Matter.Image {
+    const rows = objects.multipliers.length - 1;
     const centerX = VIRTUAL_WIDTH / 2;
-    
-    const ballSize = 32;
+
+    const t = (rows - MIN_ROWS) / (MAX_ROWS - MIN_ROWS);
+    const ballSize = lerp(MIN_BALL_SIZE, MAX_BALL_SIZE, t);
     const ballRadius = ballSize / 2;
+
     const dropX = centerX;
     const dropY = 60;
 
     const ball = scene.matter.add.image(dropX, dropY, ballImage, undefined, {
-        shape: {type: 'circle', radius: ballRadius},
-                 restitution: 1.3,
-                friction: 0.001,
-                frictionAir: 0.002,
-                collisionFilter: {
-                    category: 0x0010,
-                    mask: 0x0008 | 0x0010
-                }
+        shape: { type: 'circle', radius: ballRadius },
+        restitution: 1.3,
+        friction: 0.001,
+        frictionAir: 0.002,
+        collisionFilter: {
+            category: 0x0010,
+            mask: 0x0008 | 0x0010
+        }
     });
 
     ball.setDisplaySize(ballSize, ballSize);
@@ -43,9 +56,9 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
         type: 'circle',
         radius: ballRadius
     }, {
-        restitution: 0,       // No bounce - we control direction manually
-        friction: 0,          // No friction for predictable movement
-        frictionAir: 0.015,   // Slight air resistance for natural feel
+        restitution: 0,
+        friction: 0,
+        frictionAir: 0.015,
         density: 0.001,
         collisionFilter: {
             category: 0x0002,

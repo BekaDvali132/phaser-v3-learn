@@ -18,7 +18,6 @@ function plinkoGame({ parent }: Props) {
     canvas.width = Math.floor(displayWidth * dpr);
     canvas.height = Math.floor(displayHeight * dpr);
     canvas.style.width = displayWidth + 'px';
-    canvas.style.height = displayHeight + 'px';
 
     if (parentEl) {
         parentEl.appendChild(canvas);
