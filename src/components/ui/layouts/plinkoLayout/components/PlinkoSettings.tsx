@@ -10,6 +10,8 @@ import {
 import {type Dispatch, type SetStateAction, useEffect, useRef, useState} from "react";
 import PlinkoSettingsButton from "./PlinkoSettingsButton.tsx";
 import HistoryModal from "../../../modals/historyModal/HistoryModal.tsx";
+import {gameEvents} from "../../../../../utils/gameEvents.ts";
+import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
 
 interface Props {
     show: boolean;
@@ -21,8 +23,8 @@ function PlinkoSettings({
                             setShow
                         }: Props) {
     const [showHistory, setShowHistory] = useState(false);
-    const [soundEnabled, setSoundEnabled] = useState(false);
-    const [musicEnabled, setMusicEnabled] = useState(false);
+    const [soundEnabled, setSoundEnabled] = useState(true);
+    const [musicEnabled, setMusicEnabled] = useState(true);
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -80,14 +82,24 @@ function PlinkoSettings({
                             Icon={SoundIcon}
                             hasSwitch={true}
                             isActive={soundEnabled}
-                            onClick={() => setSoundEnabled(!soundEnabled)}
+                            onClick={() => {
+                                gameEvents.emit(GameEventsEnum.TOGGLE_SOUND, {
+                                    turnOn: soundEnabled
+                                })
+                                setSoundEnabled(!soundEnabled)
+                            }}
                         />
                         <PlinkoSettingsButton
                             title={'Music'}
                             Icon={MusicIcon}
                             hasSwitch={true}
                             isActive={musicEnabled}
-                            onClick={() => setMusicEnabled(!musicEnabled)}
+                            onClick={() => {
+                                gameEvents.emit(GameEventsEnum.TOGGLE_MUSIC, {
+                                    turnOn: musicEnabled
+                                })
+                                setMusicEnabled(!musicEnabled)
+                            }}
                         />
                     </div>
                 </ExpanderContainer>

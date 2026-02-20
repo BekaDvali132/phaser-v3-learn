@@ -1,4 +1,4 @@
-import type {PlinkoGameObjectsType} from "../PlinkoGameScene.ts";
+import type {PlinkoGameObjectsType, PlinkoGameSoundsType} from "../PlinkoGameScene.ts";
 import {gameEvents} from "../../../../../../utils/gameEvents.ts";
 import type {PlinkoHistoryItemType} from "../../../../../../utils/types/Plinko.type.ts";
 import dayjs from "dayjs";
@@ -8,14 +8,15 @@ interface Props {
     ball: Phaser.Physics.Matter.Image,
     multiplier: Phaser.GameObjects.Image,
     scene: Phaser.Scene,
-    objects: PlinkoGameObjectsType
+    objects: PlinkoGameObjectsType,
+    sounds: PlinkoGameSoundsType
 }
 
 export default function plinkoHandleBallMultiplierHit({
                                                           ball,
                                                           multiplier,
                                                           scene,
-                                                          
+                                                          sounds
                                                       }: Props) {
     if (ball.getData('hitMultiplier')) {
         return;
@@ -68,5 +69,9 @@ export default function plinkoHandleBallMultiplierHit({
         totalBet: 2,
         profit: multiplierVal * 2,
         createdAt: Date.now(),
-    } as PlinkoHistoryItemType)
+    } as PlinkoHistoryItemType);
+
+    if (sounds?.success && !sounds.success.mute) {
+        scene.sound.play('success');
+    }
 }
