@@ -123,9 +123,9 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         plinkoCreateWheel({objects: this.objects, this: this})
 
-        plinkoCreatePegs({objects: this.objects, this: this});
+        plinkoCreatePegs({objects: this.objects, this: this, rows: 14});
 
-        plinkoCreateMultipliers({objects: this.objects, this: this});
+        plinkoCreateMultipliers({objects: this.objects, this: this, rows: 14});
 
         plinkoSetupCollissions({
             this: this,
@@ -142,6 +142,12 @@ export class PlinkoGameScene extends Phaser.Scene {
           turnOn,
           sounds: this.sounds
         }));
+        gameEvents.on(GameEventsEnum.CHANGE_ROWS, ({rows}) => {
+            plinkoCreatePegs({
+                objects: this.objects, this: this, rows
+            });
+            plinkoCreateMultipliers({objects: this.objects, this: this, rows});
+        });
 
         this.handleResize();
 
