@@ -9,9 +9,9 @@ import {
 } from "../../../../../assets/SvgToTsx.tsx";
 import {type Dispatch, type SetStateAction, useEffect, useRef, useState} from "react";
 import PlinkoSettingsButton from "./PlinkoSettingsButton.tsx";
-import HistoryModal from "../../../modals/historyModal/HistoryModal.tsx";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
+import {useModalStore} from "../../../../../store/modalStore.ts";
 
 interface Props {
     show: boolean;
@@ -22,7 +22,9 @@ function PlinkoSettings({
                             show,
                             setShow
                         }: Props) {
-    const [showHistory, setShowHistory] = useState(false);
+    const toggleModal = useModalStore(
+        state => state.toggleModal
+    );
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [musicEnabled, setMusicEnabled] = useState(true);
     const ref = useRef<HTMLDivElement>(null);
@@ -73,7 +75,7 @@ function PlinkoSettings({
                             title={'History'}
                             Icon={HistoryIcon}
                             onClick={() => {
-                                setShowHistory(true)
+                                toggleModal('historyModal')
                             }}
                         />
                         <div className="my-1 w-full bg-[#ffffff1a] h-[1px]"></div>
@@ -104,7 +106,6 @@ function PlinkoSettings({
                     </div>
                 </ExpanderContainer>
             </div>
-            <HistoryModal setShow={setShowHistory} show={showHistory}/>
         </>
     );
 }

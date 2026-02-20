@@ -1,18 +1,22 @@
-import {type Dispatch, type SetStateAction, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import DefaultModal from "../defaultModal/DefaultModal.tsx";
 import type {PlinkoHistoryItemType} from "../../../../utils/types/Plinko.type.ts";
 import {gameEvents} from "../../../../utils/gameEvents.ts";
 import PlinkoHistoryItem from "../../plinkoHistory/components/PlinkoHistoryItem.tsx";
 import {GameEventsEnum} from "../../../../utils/enums/gameEvents.enum.ts";
+import {useModalStore} from "../../../../store/modalStore.ts";
 
-interface Props {
-    show: boolean;
-    setShow: Dispatch<SetStateAction<boolean>>
-}
 
 const paragraphClass = 'text-white font-semibold text-[14px] uppercase';
 
-function HistoryModal({show, setShow}: Props) {
+function HistoryModal() {
+    const show = useModalStore(
+        state => state.historyModal,
+    );
+    const toggleModal = useModalStore(
+        state => state.toggleModal,
+    );
+
     const [history, setHistory] = useState<{ [key: PlinkoHistoryItemType['id']]: PlinkoHistoryItemType }>({})
 
     useEffect(() => {
@@ -36,7 +40,7 @@ function HistoryModal({show, setShow}: Props) {
     return (
         <DefaultModal
             width={424}
-            setShow={setShow}
+            setShow={() => toggleModal('historyModal')}
             show={show}
             title={'History'}
             closeOnEscape
