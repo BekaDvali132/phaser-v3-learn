@@ -46,7 +46,7 @@ function PlinkoSettings({
         <>
             <div
                 ref={ref}
-                className={`absolute z-10 -right-5 top-13 duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0'}`}>
+                className={`absolute z-10 right-0 lg:-right-5 top-13 duration-300 ease-out ${show ? 'opacity-100' : 'opacity-0'}`}>
                 <ExpanderContainer expanded={show}>
                     <div
                         className="w-[232px] min-h-[259px] p-4 h-[259px] bg-[#0f002ab2] border border-solid border-[#ffffff1a] rounded-3xl flex flex-col gap-1 backdrop-blur-[50px]">

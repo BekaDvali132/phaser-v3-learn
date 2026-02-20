@@ -5,6 +5,7 @@ import PlinkoAutoBet from "./PlinkoAutoBet.tsx";
 import ErrorMessage from "../../../messages/errorMessage/ErrorMessage.tsx";
 import PlinkoHistory from "../../../plinkoHistory/PlinkoHistory.tsx";
 import {GameEventsEnum} from "../../../../../utils/enums/gameEvents.enum.ts";
+import delay from "../../../../../utils/functions/delay.ts";
 
 interface Props {
     className: string
@@ -84,25 +85,29 @@ function PlinkoControls({className}: Props) {
             </PlinkoControl>
             <PlinkoAutoBet/>
             <button
-                onClick={() => {
+                onClick={async () => {
                     setShowError(true)
-                    gameEvents.emit(GameEventsEnum.DROP_BALL);
+                    for (let i = 0; i < fruits; i++) {
+                        await delay(100)
+                        gameEvents.emit(GameEventsEnum.DROP_BALL)
+                    }
                 }}
                 type={'button'}
-                className={'h-13 lg:h-[66px] overflow-clip relative px-15 rounded-2xl border border-white bg-[#ff9608] text-white font-semibold uppercase text-[20px] cursor-pointer'}
+                className={'h-13 lg:h-[66px] overflow-clip relative lg:px-15 rounded-2xl border border-white bg-[#ff9608] text-center text-white font-semibold uppercase text-[20px] cursor-pointer'}
             >
                 <img src="/plinkoGameAssets/plinkoPlayButtonBg.webp" alt="Plinko Play Button"
                      className={'w-full h-full absolute left-0 top-0'}/>
                 <span className={'relative z-10'}>
-                    play
-                </span>
+                play
+            </span>
             </button>
             <PlinkoHistory className={'lg:hidden col-span-2 w-full'}/>
             <ErrorMessage label={'Insufficient balance'}
                           className={'fixed left-1/2 lg:left-auto -translate-x-1/2 lg:translate-x-0 lg:right-[54px] top-[300px] lg:top-auto lg:bottom-[184px]'}
                           show={showError} setShow={setShowError}/>
         </div>
-    );
+    )
+        ;
 }
 
 export default PlinkoControls;

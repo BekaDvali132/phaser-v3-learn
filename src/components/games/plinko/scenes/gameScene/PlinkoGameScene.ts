@@ -31,7 +31,7 @@ export type PlinkoGameSoundsType = {
 
 // game dimensions
 export const VIRTUAL_WIDTH = 800;
-export const VIRTUAL_HEIGHT = 1000;
+export let VIRTUAL_HEIGHT = window.innerWidth > 1024 ? 1000 : 2000;
 export const WHEEL_CENTER_X = VIRTUAL_WIDTH / 2;
 export const WHEEL_CENTER_Y = -5;
 
@@ -62,6 +62,7 @@ export class PlinkoGameScene extends Phaser.Scene {
 
 
     handleResize() {
+        VIRTUAL_HEIGHT = window.innerWidth > 1024 ? 1000 : 2000;
         plinkoSyncCameraZoom({
             scene: this,
             objects: this.objects

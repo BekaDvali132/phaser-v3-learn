@@ -35,7 +35,7 @@ function PlinkoLayout({children}: Props) {
     }
 
     return (
-        <div className={'flex min-h-screen w-screen flex-col relative items-center'} onClick={handleStartGame}>
+        <div className={'flex min-h-screen w-screen flex-col relative items-center bg-black'} onClick={handleStartGame}>
             <PlinkoHeader className={`${show ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'}`} />
             <main className={'h-full w-full absolute left-0 top-0'}>
                 {children}
