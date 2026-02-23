@@ -8,6 +8,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
     private loadingText?: Phaser.GameObjects.Text;
     private percentText?: Phaser.GameObjects.Text;
     private startText?: Phaser.GameObjects.Text;
+    private hasStarted = false;
 
     constructor() {
         super({ key: 'LoadingScene' });
@@ -173,7 +174,11 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         gameEvents.on(GameEventsEnum.START_GAME, this.startGame);
     }
 
-    startGame() {
+    startGame = () => {
+        if (this.hasStarted) return;
+        this.hasStarted = true;
+
+        gameEvents.off(GameEventsEnum.START_GAME, this.startGame);
         this.scale.off('resize', this.handleResize, this);
         if (this.loadingVideo) {
             this.loadingVideo.stop();
