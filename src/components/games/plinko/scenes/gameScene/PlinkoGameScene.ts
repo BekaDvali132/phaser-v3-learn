@@ -1,7 +1,6 @@
 import plinkoCreatePegs from "./components/plinkoCreatePegs.ts";
 import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
-import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
@@ -17,7 +16,6 @@ export type PlinkoGameObjectsType = {
     cageBalls: Phaser.Physics.Matter.Image[],
     wheel: Phaser.GameObjects.Video | null,
     multipliers: Phaser.GameObjects.Image[],
-    backgroundVideo: Phaser.GameObjects.Video | null,
     dropButton: Phaser.GameObjects.Rectangle | null,
     dropButtonText: Phaser.GameObjects.Text | null,
     gameContainer: Phaser.GameObjects.Container | null,
@@ -31,7 +29,7 @@ export type PlinkoGameSoundsType = {
 
 // game dimensions
 export const VIRTUAL_WIDTH = 800;
-export let VIRTUAL_HEIGHT = window.innerWidth > 1024 ? 1000 : 2000;
+export const VIRTUAL_HEIGHT = 1000;
 export const WHEEL_CENTER_X = VIRTUAL_WIDTH / 2;
 export const WHEEL_CENTER_Y = -5;
 
@@ -48,7 +46,6 @@ export class PlinkoGameScene extends Phaser.Scene {
         cageBalls: [],
         wheel: null,
         multipliers: [],
-        backgroundVideo: null,
         dropButton: null,
         dropButtonText: null,
         gameContainer: null,
@@ -62,10 +59,8 @@ export class PlinkoGameScene extends Phaser.Scene {
 
 
     handleResize() {
-        VIRTUAL_HEIGHT = window.innerWidth > 1024 ? 1000 : 2000;
         plinkoSyncCameraZoom({
-            scene: this,
-            objects: this.objects
+            scene: this
         });
 
         const canvas = document.getElementById('game');
@@ -116,11 +111,6 @@ export class PlinkoGameScene extends Phaser.Scene {
         this.matter.world.setBounds(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         (this.matter.world.engine as unknown as { gravity: { y: number } }).gravity.y = 1.5;
-
-        plinkoCreateVideoBackground({
-            objects: this.objects,
-            scene: this
-        });
 
         plinkoCreateWheel({objects: this.objects, this: this})
 
@@ -190,10 +180,5 @@ export class PlinkoGameScene extends Phaser.Scene {
         this.scale.off('resize', this.handleResize, this);
 
         gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBall);
-
-        if (this.objects.backgroundVideo) {
-            this.objects.backgroundVideo.stop();
-            this.objects.backgroundVideo.destroy();
-        }
     }
 }

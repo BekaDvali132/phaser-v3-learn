@@ -23,7 +23,7 @@ function PhaserGameRender({ gameInstance }: Props) {
   return (
     <div
       id={"phaser-container"}
-      style={{ width: "100%", height: "100%", overflow: "hidden" }}
+      className="lg:h-full h-[calc(100vw*800/1000+150px)] w-full overflow-hidden"
     ></div>
   );
 }
