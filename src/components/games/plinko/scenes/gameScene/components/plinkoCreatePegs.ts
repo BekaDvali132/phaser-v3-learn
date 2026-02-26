@@ -47,6 +47,10 @@ export default function createPegs({ objects, this: scene }: Props): void{
                     mask: 0x0002
                 }
             });
+
+            // Label the body for O(1) collision identification
+            (peg.body as MatterJS.BodyType).label = 'peg';
+
             peg.setData('rowIndex', row);
             peg.setData('colIndex', col);
 

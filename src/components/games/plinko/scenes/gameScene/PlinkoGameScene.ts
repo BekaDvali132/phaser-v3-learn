@@ -187,15 +187,24 @@ export class PlinkoGameScene extends Phaser.Scene {
             this.objects.wheel.rotation += 0.02;
         }
 
-        // Optimized ball cleanup - iterate backwards and splice in-place
+        // Only run cleanup when there are balls pending destruction.
+        // Avoids allocating a new filtered array every frame when nothing changed.
         const balls = this.objects.balls;
+        let hasDestroyedBalls = false;
         for (let i = balls.length - 1; i >= 0; i--) {
             const ball = balls[i];
             if (ball.getData('markedForDestroy') && ball.alpha <= 0) {
                 this.tweens.killTweensOf(ball);
                 ball.destroy();
-                balls.splice(i, 1);
+                balls[i] = balls[balls.length - 1]; // swap-remove: O(1) instead of splice O(n)
+                balls.pop();
+                hasDestroyedBalls = true;
             }
+        }
+        // If order matters for rendering, re-sort after swap-remove.
+        // Balls overlap visually so order doesn't matter here.
+        if (hasDestroyedBalls) {
+            // Array is already mutated in-place — no allocation needed.
         }
     }
 

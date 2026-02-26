@@ -52,6 +52,9 @@ export default function plinkoDropBall({ objects, this: scene, ballPath, ballIma
         }
     });
 
+    // Label the body for O(1) collision identification
+    (ball.body as MatterJS.BodyType).label = 'ball';
+
     ball.setData('id', uuidv4());
     ball.setData('path', ballPath);
     ball.setData('currentRow', 0);

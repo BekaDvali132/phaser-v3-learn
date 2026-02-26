@@ -26,7 +26,11 @@ export function plinkoCreateMultipliers ({ this: scene, objects }: Props): void{
         const sensor = scene.matter.add.rectangle(x, yPosition, multiplierWidth, multiplierHeight, {
             isStatic: true,
             isSensor: true,
-            label: 'multiplier'
+            label: 'multiplier',
+            collisionFilter: {
+                category: 0x0004,
+                mask: 0x0002  // Only collide with balls — avoids unnecessary peg↔multiplier checks
+            }
         });
         sensor.gameObject = multiplier;
         multiplier.setData('sensor', sensor);
