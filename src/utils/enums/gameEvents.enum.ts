@@ -5,4 +5,5 @@ export enum GameEventsEnum {
     BALL_DROPPED = 'ballDropped',
     TOGGLE_SOUND = 'toggleSound',
     TOGGLE_MUSIC = 'toggleMusic',
+    CHANGE_ROWS = 'changeRows',
 }

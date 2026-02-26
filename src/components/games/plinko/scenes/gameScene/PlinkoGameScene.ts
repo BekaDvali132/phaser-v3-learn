@@ -1,7 +1,6 @@
 import plinkoCreatePegs from "./components/plinkoCreatePegs.ts";
 import plinkoSetupCollissions from "./components/plinkoSetupCollissions.ts";
 import {plinkoCreateMultipliers} from "./components/plinkoCreateMultipliers.ts";
-import plinkoCreateVideoBackground from "./components/plinkoCreateVideoBackground.ts";
 import plinkoSyncCameraZoom from "./components/plinkoSyncCameraZoom.ts";
 import {gameEvents} from "../../../../../utils/gameEvents.ts";
 import plinkoDropBall, {getRandomBallImage} from "./components/plinkoDropBall.ts";
@@ -19,7 +18,6 @@ export type PlinkoGameObjectsType = {
     cageBalls: Phaser.Physics.Matter.Image[],
     wheel: Phaser.GameObjects.Video | null,
     multipliers: Phaser.GameObjects.Image[],
-    backgroundVideo: Phaser.GameObjects.Video | null,
     dropButton: Phaser.GameObjects.Rectangle | null,
     dropButtonText: Phaser.GameObjects.Text | null,
     gameContainer: Phaser.GameObjects.Container | null,
@@ -54,7 +52,6 @@ export class PlinkoGameScene extends Phaser.Scene {
         cageBalls: [],
         wheel: null,
         multipliers: [],
-        backgroundVideo: null,
         dropButton: null,
         dropButtonText: null,
         gameContainer: null,
@@ -69,8 +66,7 @@ export class PlinkoGameScene extends Phaser.Scene {
 
     handleResize() {
         plinkoSyncCameraZoom({
-            scene: this,
-            objects: this.objects
+            scene: this
         });
 
         const canvas = document.getElementById('game');
@@ -128,16 +124,11 @@ export class PlinkoGameScene extends Phaser.Scene {
 
         (this.matter.world.engine as unknown as { gravity: { y: number } }).gravity.y = 1.5;
 
-        plinkoCreateVideoBackground({
-            objects: this.objects,
-            scene: this
-        });
-
         plinkoCreateWheel({objects: this.objects, this: this})
 
-        plinkoCreatePegs({objects: this.objects, this: this});
+        plinkoCreatePegs({objects: this.objects, this: this, rows: 14});
 
-        plinkoCreateMultipliers({objects: this.objects, this: this});
+        plinkoCreateMultipliers({objects: this.objects, this: this, rows: 14});
 
         plinkoSetupCollissions({
             this: this,
@@ -154,6 +145,12 @@ export class PlinkoGameScene extends Phaser.Scene {
           turnOn,
           sounds: this.sounds
         }));
+        gameEvents.on(GameEventsEnum.CHANGE_ROWS, ({rows}) => {
+            plinkoCreatePegs({
+                objects: this.objects, this: this, rows
+            });
+            plinkoCreateMultipliers({objects: this.objects, this: this, rows});
+        });
 
         this.handleResize();
 
@@ -211,13 +208,6 @@ export class PlinkoGameScene extends Phaser.Scene {
     destroy() {
         this.scale.off('resize', this.handleResize, this);
 
-        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBallEvent);
-
-        cleanupGlowPool();
-
-        if (this.objects.backgroundVideo) {
-            this.objects.backgroundVideo.stop();
-            this.objects.backgroundVideo.destroy();
-        }
+        gameEvents.off(GameEventsEnum.DROP_BALL, this.handleDropBall);
     }
 }

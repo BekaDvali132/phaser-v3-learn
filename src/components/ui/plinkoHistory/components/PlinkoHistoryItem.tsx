@@ -50,9 +50,14 @@ function PlinkoHistoryItem({data: {payout, time, totalBet, profit}, handleRemove
                     {payout} x
                 </p>
                 <button type={'button'} className={`relative h-[33px] flex items-center justify-center`}>
+                    <div className={'absolute lg:hidden w-full h-full rounded-xl'}
+                    style={{
+                        background: profit > 0 ?  '#00C8534D' : '#FF96084D'
+                    }}
+                    />
                     <img
                         src={profit > 0 ? '/plinkoGameAssets/plinkoWinButtonBg.png' : "/plinkoGameAssets/plinkoLossButtonBg.png"}
-                        alt="Button Background" height={33} width={68} className={'absolute w-full h-full'}/>
+                        alt="Button Background" height={33} width={68} className={'absolute w-full h-full lg:block hidden'}/>
                     <p className={`${paragraphClass} z-10`}>
                         {profit.toPrecision(3)}
                     </p>

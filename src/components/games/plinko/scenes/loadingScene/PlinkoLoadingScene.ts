@@ -8,7 +8,7 @@ export class PlinkoLoadingScene extends Phaser.Scene {
     private loadingText?: Phaser.GameObjects.Text;
     private percentText?: Phaser.GameObjects.Text;
     private startText?: Phaser.GameObjects.Text;
-    private handleStartGameEvent = () => this.startGame();
+    private hasStarted = false;
 
     constructor() {
         super({ key: 'LoadingScene' });
@@ -71,7 +71,6 @@ export class PlinkoLoadingScene extends Phaser.Scene {
 
         // Load all game assets
         this.load.image('pegImage', '/plinkoGameAssets/plinkoPeg.webp');
-        this.load.video('backgroundVideo', '/plinkoGameAssets/plinkoBackground.mp4');
         this.load.video('wheel', '/plinkoGameAssets/plinkoWheel.webm');
         this.load.spritesheet('multiplierSheet', '/plinkoGameAssets/plinkoMultipliers.png', {
             frameWidth: 128,  // Width of each multiplier frame
@@ -179,8 +178,11 @@ export class PlinkoLoadingScene extends Phaser.Scene {
         gameEvents.on(GameEventsEnum.START_GAME, this.handleStartGameEvent);
     }
 
-    startGame() {
-        gameEvents.off(GameEventsEnum.START_GAME, this.handleStartGameEvent);
+    startGame = () => {
+        if (this.hasStarted) return;
+        this.hasStarted = true;
+
+        gameEvents.off(GameEventsEnum.START_GAME, this.startGame);
         this.scale.off('resize', this.handleResize, this);
         if (this.loadingVideo) {
             this.loadingVideo.stop();

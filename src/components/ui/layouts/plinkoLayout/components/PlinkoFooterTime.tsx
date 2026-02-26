@@ -13,7 +13,7 @@ function PlinkoFooterTime() {
         }
     }, []);
     return (
-        <p className={'text-[12px] font-medium text-[#f2f2f2]'}>
+        <p className={'text-[10px] lg:text-[12px] font-medium text-[#f2f2f2]'}>
             {dayjs().format('HH:mm:ss')}
         </p>
     );

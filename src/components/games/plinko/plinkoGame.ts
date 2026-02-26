@@ -19,6 +19,7 @@ function plinkoGame({ parent }: Props) {
     canvas.height = Math.floor(displayHeight * dpr);
     canvas.style.width = displayWidth + 'px';
     canvas.style.height = displayHeight + 'px';
+    canvas.style.backgroundColor = 'transparent';
 
     if (parentEl) {
         parentEl.appendChild(canvas);
@@ -27,6 +28,7 @@ function plinkoGame({ parent }: Props) {
     const config: Types.Core.GameConfig = {
         type: Phaser.WEBGL,
         canvas: canvas,
+        transparent: true,
         width: canvas.width,
         height: canvas.height,
         render: {
