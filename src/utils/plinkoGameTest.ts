@@ -1,7 +1,7 @@
 import { gameEvents } from "./gameEvents.ts";
 
 // Map to store pending ball test promises by ball ID
-const pendingBallTests: Map<number, {
+const pendingBallTests: Map<string, {
     expectedDestination: number;
     pathArray: number[];
     resolve: () => void;
@@ -13,7 +13,7 @@ export function calculateDestinationFromPath(pathArray: number[], size: number):
         throw new Error(`Path array length ${pathArray.length} does not match expected size ${size}`);
     }
     
-    let finalPoint = 7;
+    let finalPoint = Math.floor(size / 2);
     for (let i = 0; i < pathArray.length; i++) {
         const direction = (pathArray[i] === 1) ? 0 : -1;
         finalPoint = finalPoint + direction;
@@ -22,7 +22,7 @@ export function calculateDestinationFromPath(pathArray: number[], size: number):
     return finalPoint;
 }
 
-export function registerBallTest(ballId: number, pathArray: number[], size: number): Promise<void> {
+export function registerBallTest(ballId: string, pathArray: number[], size: number): Promise<void> {
     const expectedDestination = calculateDestinationFromPath(pathArray, size);
     
     return new Promise((resolve) => {
@@ -34,7 +34,7 @@ export function registerBallTest(ballId: number, pathArray: number[], size: numb
     });
 }
 
-export function onBallArrival(ballId: number, actualSideIndex: number): void {
+export function onBallArrival(ballId: string, actualSideIndex: number): void {
     const pendingTest = pendingBallTests.get(ballId);
     
     if (pendingTest) {
@@ -50,6 +50,6 @@ export function onBallArrival(ballId: number, actualSideIndex: number): void {
     }
 }
 
-gameEvents.on('ballArrivedAtMultiplier', (ballId: number, sideIndex: number) => {
+gameEvents.on('ballArrivedAtMultiplier', (ballId: string, sideIndex: number) => {
     onBallArrival(ballId, sideIndex);
 });

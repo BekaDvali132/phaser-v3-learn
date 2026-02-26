@@ -46,6 +46,7 @@ export function plinkoCreateMultipliers({ this: scene, objects, rows }: Props): 
     const verticalGap = lerp(MIN_VERTICAL_GAP, MAX_VERTICAL_GAP, t);
 
     const numberOfMultipliers = rows + 1;
+    const centerIndex = Math.floor(numberOfMultipliers / 2);
 
     const centerX = VIRTUAL_WIDTH / 2;
     const startX = centerX - (numberOfMultipliers - 1) * multiplierWidth / 2;
@@ -72,6 +73,7 @@ export function plinkoCreateMultipliers({ this: scene, objects, rows }: Props): 
         sensor.gameObject = multiplier;
         multiplier.setData('sensor', sensor);
         multiplier.setData('value', i);
+        multiplier.setData('sideIndex', i - centerIndex);
 
         objects.multipliers.push(multiplier);
     }

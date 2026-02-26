@@ -94,7 +94,7 @@ export class PlinkoGameScene extends Phaser.Scene {
     }
 
     async handleDropBall() {
-        const pathSize = 14;
+        const pathSize = Math.max((this.objects.multipliers.length || 15) - 1, 1);
         const array = plinkoGenerateRandomBallPathFixed(pathSize);
         const ball = plinkoDropBall({
             this: this,
@@ -103,7 +103,7 @@ export class PlinkoGameScene extends Phaser.Scene {
             ballImage: getRandomBallImage()
         });
         
-        const ballId = ball.getData('Ball_id') as number;
+        const ballId = ball.getData('Ball_id') as string;
         // Register test and wait for ball arrival asynchronously
         await registerBallTest(ballId, array, pathSize);
     }
